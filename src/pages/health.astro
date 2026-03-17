@@ -1,5 +1,7 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import Sidebar from '@/components/layout/Sidebar.vue';
+import Header from '@/components/layout/Header.vue';
 
 const breadcrumbs = [
   { label: 'Accueil', href: '/' },
@@ -23,79 +25,85 @@ const metrics = [
 ];
 ---
 
-<Layout title="Santé Système" breadcrumbs={breadcrumbs}>
-  <div class="space-y-6">
-    {/* En-tête */}
-    <div class="flex items-center justify-between">
-      <div>
-        <h1 class="text-2xl font-bold text-slate-900">Santé Système</h1>
-        <p class="text-slate-500 mt-1">Surveillez l'infrastructure et les services de la plateforme</p>
-      </div>
-    </div>
-
-    <!-- Status Banner -->
-    <div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="h-10 w-10 rounded-full bg-emerald-500 flex items-center justify-center">
-          <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-          </svg>
-        </div>
-        <div>
-          <h2 class="font-semibold text-emerald-900">Tous les Systèmes Opérationnels</h2>
-          <p class="text-sm text-emerald-700">Dernier incident : il y a 14 jours</p>
-        </div>
-      </div>
-      <div class="text-right">
-        <p class="text-sm text-emerald-700">Disponibilité Plateforme</p>
-        <p class="text-2xl font-bold text-emerald-900">99,99%</p>
-      </div>
-    </div>
-
-    <!-- Metrics -->
-    <div class="grid gap-4 md:grid-cols-4">
-      {metrics.map((metric) => (
-        <div class="rounded-xl border border-slate-200 bg-white p-4">
-          <p class="text-sm text-slate-500">{metric.label}</p>
-          <div class="mt-2 flex items-end justify-between">
-            <p class="text-2xl font-bold">{metric.value}%</p>
-          </div>
-          <div class="mt-2 h-2 bg-slate-100 rounded-full overflow-hidden">
-            <div class={`h-full rounded-full ${metric.color}`} style={`width: ${metric.value}%`}></div>
-          </div>
-        </div>
-      ))}
-    </div>
-
-    <!-- Services Status -->
-    <div class="rounded-xl border border-slate-200 bg-white overflow-hidden">
-      <div class="p-4 border-b border-slate-100">
-        <h2 class="text-lg font-semibold">État des Services</h2>
-      </div>
-      <div class="divide-y divide-slate-100">
-        {services.map((service) => (
-          <div class="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
-            <div class="flex items-center gap-3">
-              <div class={`h-2.5 w-2.5 rounded-full ${
-                service.status === 'operational' ? 'bg-emerald-500' : 
-                service.status === 'degraded' ? 'bg-amber-500' : 'bg-red-500'
-              }`}></div>
-              <span class="font-medium">{service.name}</span>
+<Layout title="Santé Système">
+  <div class="flex min-h-screen">
+    <Sidebar role="superadmin" activePath="/health" client:load />
+    
+    <div class="ml-60 flex-1">
+      <Header 
+        title="Santé Système" 
+        subtitle="Surveillez l'infrastructure et les services de la plateforme"
+        currentRole="superadmin"
+        breadcrumbs={breadcrumbs}
+        client:load
+      />
+      
+      <main class="p-6">
+        <!-- Status Banner -->
+        <div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50 flex items-center justify-between mb-6">
+          <div class="flex items-center gap-3">
+            <div class="h-10 w-10 rounded-full bg-emerald-500 flex items-center justify-center">
+              <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
             </div>
-            <div class="flex items-center gap-6 text-sm">
-              <span class="text-slate-500">Disponibilité : {service.uptime}</span>
-              <span class="text-slate-500">Réponse : {service.response}</span>
-              <span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${
-                service.status === 'operational' ? 'bg-emerald-100 text-emerald-700' : 
-                service.status === 'degraded' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'
-              }`}>
-                {service.status === 'operational' ? 'Opérationnel' : 
-                 service.status === 'degraded' ? 'Dégradé' : 'Hors service'}
-              </span>
+            <div>
+              <h2 class="font-semibold text-emerald-900">Tous les Systèmes Opérationnels</h2>
+              <p class="text-sm text-emerald-700">Dernière vérification : il y a 2 minutes</p>
             </div>
           </div>
-        ))}
-      </div>
+          <div class="text-right">
+            <p class="text-sm text-emerald-700">Disponibilité Plateforme</p>
+            <p class="text-2xl font-bold text-emerald-900">99,99%</p>
+          </div>
+        </div>
+
+        <!-- Metrics -->
+        <div class="grid gap-4 md:grid-cols-4 mb-6">
+          {metrics.map((metric) => (
+            <div class="rounded-xl border border-slate-200 bg-white p-4">
+              <p class="text-sm text-slate-500">{metric.label}</p>
+              <div class="mt-2 flex items-end justify-between">
+                <p class="text-2xl font-bold">{metric.value}%</p>
+              </div>
+              <div class="mt-2 h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div class={`h-full rounded-full ${metric.color}`} style={`width: ${metric.value}%`}></div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <!-- Services Status -->
+        <div class="rounded-xl border border-slate-200 bg-white overflow-hidden">
+          <div class="p-4 border-b border-slate-100">
+            <h2 class="text-lg font-semibold">État des Services</h2>
+          </div>
+          <div class="divide-y divide-slate-100">
+            {services.map((service) => (
+              <div class="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                <div class="flex items-center gap-3">
+                  <div class={`h-2.5 w-2.5 rounded-full ${
+                    service.status === 'operational' ? 'bg-emerald-500' : 
+                    service.status === 'degraded' ? 'bg-amber-500' : 'bg-red-500'
+                  }`}></div>
+                  <span class="font-medium">{service.name}</span>
+                </div>
+                <div class="flex items-center gap-6 text-sm">
+                  <span class="text-slate-500">Disponibilité : {service.uptime}</span>
+                  <span class="text-slate-500">Réponse : {service.response}</span>
+                  <span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${
+                    service.status === 'operational' ? 'bg-emerald-100 text-emerald-700' : 
+                    service.status === 'degraded' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'
+                  }`}>
+                    {service.status === 'operational' ? 'Opérationnel' : 
+                     service.status === 'degraded' ? 'Dégradé' : 'Hors service'}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
     </div>
   </div>
 </Layout>

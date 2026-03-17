@@ -167,43 +167,44 @@ const superAdminNav: NavSection[] = [
   }
 ];
 
-// Manager Navigation
+// Manager Navigation - Role-specific URLs
 const managerNav: NavSection[] = [
   {
     title: 'Opérations',
     items: [
       { label: 'Tableau de bord', href: '/manager', icon: LayoutDashboard },
       { label: 'Mes Tâches', href: '/manager?view=tasks', icon: ClipboardList },
-      { label: 'Hub Agents', href: '/agents', icon: Bot },
-      { label: 'Validation', href: '/validation', icon: CheckCircle, badge: 2 },
+      { label: 'Hub Agents', href: '/manager/agents', icon: Bot },
+      { label: 'Validation', href: '/manager/validation', icon: CheckCircle, badge: 2 },
     ]
   },
   {
     title: 'Analyses',
     items: [
-      { label: 'Rapports', href: '/reports', icon: BarChart3 },
-      { label: 'Équipe', href: '/team', icon: Users },
-      { label: 'Paramètres', href: '/settings', icon: Settings },
+      { label: 'Mes Projets', href: '/manager/projects', icon: FolderKanban },
+      { label: 'Rapports', href: '/manager/reports', icon: BarChart3 },
+      { label: 'Mon Équipe', href: '/manager/team', icon: Users },
+      { label: 'Paramètres', href: '/manager/settings', icon: Settings },
     ]
   }
 ];
 
-// Exécutif Navigation
+// Exécutif Navigation - Role-specific URLs
 const executifNav: NavSection[] = [
   {
     title: 'Travail',
     items: [
       { label: 'Mes Tâches', href: '/executif', icon: ClipboardList },
-      { label: 'Tâche en cours', href: '/executif?tab=current', icon: Briefcase },
-      { label: 'Mes Agents', href: '/agents', icon: Bot },
+      { label: 'Tâche en cours', href: '/executif/tasks', icon: Briefcase },
+      { label: 'Mes Agents', href: '/executif/agents', icon: Bot },
     ]
   },
   {
     title: 'Performance',
     items: [
       { label: 'Mes Stats', href: '/executif?tab=performance', icon: LineChart },
-      { label: 'Équipe', href: '/team', icon: Users },
-      { label: 'Paramètres', href: '/settings', icon: Settings },
+      { label: 'Mon Équipe', href: '/executif/team', icon: Users },
+      { label: 'Paramètres', href: '/executif/settings', icon: Settings },
     ]
   }
 ];

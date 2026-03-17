@@ -1,5 +1,7 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import Sidebar from '@/components/layout/Sidebar.vue';
+import Header from '@/components/layout/Header.vue';
 import { users } from '@/data/mockData';
 
 const breadcrumbs = [
@@ -8,104 +10,111 @@ const breadcrumbs = [
 ];
 ---
 
-<Layout title="Gestion Utilisateurs" breadcrumbs={breadcrumbs}>
-  <div class="space-y-6">
-    <div class="flex items-center justify-between">
-      <div>
-        <h1 class="text-2xl font-bold text-slate-900">Gestion des Utilisateurs</h1>
-        <p class="text-slate-500 mt-1">Gérez les utilisateurs de la plateforme dans toutes les entreprises</p>
-      </div>
-    </div>
+<Layout title="Gestion Utilisateurs">
+  <div class="flex min-h-screen">
+    <Sidebar role="superadmin" activePath="/users" client:load />
+    
+    <div class="ml-60 flex-1">
+      <Header 
+        title="Gestion des Utilisateurs" 
+        subtitle="Gérez les utilisateurs de la plateforme dans toutes les entreprises"
+        currentRole="superadmin"
+        breadcrumbs={breadcrumbs}
+        client:load
+      />
+      
+      <main class="p-6">
+        <!-- Stats -->
+        <div class="grid gap-4 md:grid-cols-4 mb-6">
+          <div class="rounded-xl border border-slate-200 bg-white p-4">
+            <p class="text-sm text-slate-500">Utilisateurs Totaux</p>
+            <p class="text-2xl font-bold">156</p>
+          </div>
+          <div class="rounded-xl border border-slate-200 bg-white p-4">
+            <p class="text-sm text-slate-500">En Ligne Maintenant</p>
+            <p class="text-2xl font-bold text-emerald-600">42</p>
+          </div>
+          <div class="rounded-xl border border-slate-200 bg-white p-4">
+            <p class="text-sm text-slate-500">Admins</p>
+            <p class="text-2xl font-bold">24</p>
+          </div>
+          <div class="rounded-xl border border-slate-200 bg-white p-4">
+            <p class="text-sm text-slate-500">Invitations en Attente</p>
+            <p class="text-2xl font-bold text-amber-600">5</p>
+          </div>
+        </div>
 
-    <!-- Stats -->
-    <div class="grid gap-4 md:grid-cols-4">
-      <div class="rounded-xl border border-slate-200 bg-white p-4">
-        <p class="text-sm text-slate-500">Utilisateurs Totaux</p>
-        <p class="text-2xl font-bold">156</p>
-      </div>
-      <div class="rounded-xl border border-slate-200 bg-white p-4">
-        <p class="text-sm text-slate-500">En Ligne Maintenant</p>
-        <p class="text-2xl font-bold text-emerald-600">42</p>
-      </div>
-      <div class="rounded-xl border border-slate-200 bg-white p-4">
-        <p class="text-sm text-slate-500">Admins</p>
-        <p class="text-2xl font-bold">24</p>
-      </div>
-      <div class="rounded-xl border border-slate-200 bg-white p-4">
-        <p class="text-sm text-slate-500">Invitations en Attente</p>
-        <p class="text-2xl font-bold text-amber-600">5</p>
-      </div>
-    </div>
+        <!-- Filters -->
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center gap-2">
+            <input 
+              type="search" 
+              placeholder="Rechercher des utilisateurs..."
+              class="h-9 w-64 rounded-lg border border-slate-200 bg-white px-3 text-sm"
+            />
+            <button class="px-4 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-medium hover:bg-slate-200 transition-colors">
+              Filtrer par Rôle
+            </button>
+          </div>
+          <button class="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium flex items-center gap-2 hover:bg-emerald-700 transition-colors">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Inviter un Utilisateur
+          </button>
+        </div>
 
-    <!-- Filters -->
-    <div class="flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <input 
-          type="search" 
-          placeholder="Rechercher des utilisateurs..."
-          class="h-9 w-64 rounded-lg border border-slate-200 bg-white px-3 text-sm"
-        />
-        <button class="px-4 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-medium hover:bg-slate-200 transition-colors">
-          Filtrer par Rôle
-        </button>
-      </div>
-      <button class="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium flex items-center gap-2 hover:bg-emerald-700 transition-colors">
-        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-        </svg>
-        Inviter un Utilisateur
-      </button>
-    </div>
-
-    <!-- Users Table -->
-    <div class="rounded-xl border border-slate-200 bg-white overflow-hidden">
-      <div class="overflow-x-auto">
-        <table class="w-full">
-          <thead>
-            <tr class="border-b border-slate-100 bg-slate-50">
-              <th class="px-4 py-3 text-left text-sm font-medium text-slate-500">Utilisateur</th>
-              <th class="px-4 py-3 text-left text-sm font-medium text-slate-500">Rôle</th>
-              <th class="px-4 py-3 text-left text-sm font-medium text-slate-500">Entreprise</th>
-              <th class="px-4 py-3 text-left text-sm font-medium text-slate-500">Statut</th>
-              <th class="px-4 py-3 text-left text-sm font-medium text-slate-500">Dernière Activité</th>
-              <th class="px-4 py-3 text-left text-sm font-medium text-slate-500">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                <td class="px-4 py-3">
-                  <div class="flex items-center gap-3">
-                    <div class="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-medium">
-                      {user.name.charAt(0)}
-                    </div>
-                    <div>
-                      <p class="font-medium text-slate-900">{user.name}</p>
-                      <p class="text-sm text-slate-500">{user.email}</p>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-4 py-3">
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 capitalize">
-                    {user.role}
-                  </span>
-                </td>
-                <td class="px-4 py-3 text-sm text-slate-700">Acme Corp</td>
-                <td class="px-4 py-3">
-                  <div class="flex items-center gap-2">
-                    <div class={`h-2 w-2 rounded-full ${user.status === 'online' ? 'bg-emerald-500' : 'bg-slate-400'}`}></div>
-                    <span class="text-sm text-slate-700 capitalize">{user.status}</span>
-                  </div>
-                </td>
-                <td class="px-4 py-3 text-sm text-slate-500">il y a 2 min</td>
-                <td class="px-4 py-3">
-                  <button class="text-sm text-emerald-600 hover:text-emerald-700 font-medium">Modifier</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+        <!-- Users Table -->
+        <div class="rounded-xl border border-slate-200 bg-white overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr class="border-b border-slate-100 bg-slate-50">
+                  <th class="px-4 py-3 text-left text-sm font-medium text-slate-500">Utilisateur</th>
+                  <th class="px-4 py-3 text-left text-sm font-medium text-slate-500">Rôle</th>
+                  <th class="px-4 py-3 text-left text-sm font-medium text-slate-500">Entreprise</th>
+                  <th class="px-4 py-3 text-left text-sm font-medium text-slate-500">Statut</th>
+                  <th class="px-4 py-3 text-left text-sm font-medium text-slate-500">Dernière Activité</th>
+                  <th class="px-4 py-3 text-left text-sm font-medium text-slate-500">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((user) => (
+                  <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                    <td class="px-4 py-3">
+                      <div class="flex items-center gap-3">
+                        <div class="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-medium">
+                          {user.name.charAt(0)}
+                        </div>
+                        <div>
+                          <p class="font-medium text-slate-900">{user.name}</p>
+                          <p class="text-sm text-slate-500">{user.email}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 capitalize">
+                        {user.role}
+                      </span>
+                    </td>
+                    <td class="px-4 py-3 text-sm text-slate-700">Acme Corp</td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center gap-2">
+                        <div class={`h-2 w-2 rounded-full ${user.status === 'online' ? 'bg-emerald-500' : 'bg-slate-400'}`}></div>
+                        <span class="text-sm text-slate-700 capitalize">{user.status}</span>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3 text-sm text-slate-500">il y a 2 min</td>
+                    <td class="px-4 py-3">
+                      <button class="text-sm text-emerald-600 hover:text-emerald-700 font-medium">Modifier</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
     </div>
   </div>
 </Layout>

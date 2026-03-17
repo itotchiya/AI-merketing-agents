@@ -260,32 +260,32 @@ export const validationItems: ValidationItem[] = [
 ];
 
 export const adminKPIs: KPIData[] = [
-  { label: 'Projets Actifs', value: '8', trend: '+2', trendLabel: 'vs mois dernier', icon: 'folder' },
-  { label: 'Validations en Attente', value: '3', trend: '-1', trendLabel: 'vs hier', icon: 'check' },
-  { label: 'Exécutions Agents', value: '127', trend: '+23', trendLabel: 'cette semaine', icon: 'bot' },
-  { label: 'Score BPS', value: '8.4', trend: '+0.3', trendLabel: 'vs semaine dernière', icon: 'chart' },
+  { label: 'Projets Actifs', value: '8', trend: 2, trendLabel: 'vs mois dernier', icon: 'folder' },
+  { label: 'Validations en Attente', value: '3', trend: -1, trendLabel: 'vs hier', icon: 'check' },
+  { label: 'Exécutions Agents', value: '127', trend: 23, trendLabel: 'cette semaine', icon: 'bot' },
+  { label: 'Score BPS', value: '8.4', trend: 0.3, trendLabel: 'vs semaine dernière', icon: 'chart' },
 ];
 
 export const superAdminKPIs: KPIData[] = [
-  { label: 'Entreprises Totales', value: '24', trend: '+3', trendLabel: 'ce mois-ci', icon: 'building' },
-  { label: 'Utilisateurs Actifs', value: '186', trend: '+12', trendLabel: 'cette semaine', icon: 'users' },
-  { label: 'Exécutions Agents', value: '12.4K', trend: '+18%', trendLabel: 'vs mois dernier', icon: 'bot' },
-  { label: 'Santé Plateforme', value: '99.9%', trend: '0', trendLabel: 'disponibilité', icon: 'heart' },
-  { label: 'Revenu Mensuel', value: '48.2K€', trend: '+8%', trendLabel: 'vs mois dernier', icon: 'dollar' },
+  { label: 'Entreprises Totales', value: '24', trend: 3, trendLabel: 'ce mois-ci', icon: 'building' },
+  { label: 'Utilisateurs Actifs', value: '186', trend: 12, trendLabel: 'cette semaine', icon: 'users' },
+  { label: 'Exécutions Agents', value: '12.4K', trend: 18, trendLabel: 'vs mois dernier', icon: 'bot' },
+  { label: 'Santé Plateforme', value: '99.9%', trend: 0, trendLabel: 'disponibilité', icon: 'heart' },
+  { label: 'Revenu Mensuel', value: '48.2K€', trend: 8, trendLabel: 'vs mois dernier', icon: 'dollar' },
 ];
 
 export const managerKPIs: KPIData[] = [
-  { label: 'Mes Projets', value: '4', trend: '+1', trendLabel: 'nouveau cette semaine', icon: 'folder' },
-  { label: 'En Attente de Validation', value: '2', trend: '0', trendLabel: 'depuis hier', icon: 'check' },
-  { label: 'Tâches Terminées', value: '18', trend: '+5', trendLabel: 'cette semaine', icon: 'check' },
-  { label: 'Velocité Équipe', value: '94%', trend: '+4%', trendLabel: 'vs objectif', icon: 'chart' },
+  { label: 'Mes Projets', value: '4', trend: 1, trendLabel: 'nouveau cette semaine', icon: 'folder' },
+  { label: 'En Attente de Validation', value: '2', trend: 0, trendLabel: 'depuis hier', icon: 'check' },
+  { label: 'Tâches Terminées', value: '18', trend: 5, trendLabel: 'cette semaine', icon: 'check' },
+  { label: 'Velocité Équipe', value: '94%', trend: 4, trendLabel: 'vs objectif', icon: 'chart' },
 ];
 
 export const executifKPIs: KPIData[] = [
-  { label: 'Mes Tâches', value: '5', trend: '-2', trendLabel: 'reste aujourd\'hui', icon: 'clipboard' },
-  { label: 'Terminées Aujourd\'hui', value: '3', trend: '+1', trendLabel: 'vs hier', icon: 'check' },
-  { label: 'Heures Loguées', value: '6.5', trend: '1.5h', trendLabel: 'restantes', icon: 'clock' },
-  { label: 'Score Qualité', value: '4.8', trend: '+0.2', trendLabel: 'cette semaine', icon: 'star' },
+  { label: 'Mes Tâches', value: '5', trend: -2, trendLabel: 'reste aujourd\'hui', icon: 'clipboard' },
+  { label: 'Terminées Aujourd\'hui', value: '3', trend: 1, trendLabel: 'vs hier', icon: 'check' },
+  { label: 'Heures Loguées', value: '6.5', trend: 1.5, trendLabel: 'restantes', icon: 'clock' },
+  { label: 'Score Qualité', value: '4.8', trend: 0.2, trendLabel: 'cette semaine', icon: 'star' },
 ];
 
 export const activities: ActivityItem[] = [

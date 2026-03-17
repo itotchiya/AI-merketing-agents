@@ -1,5 +1,7 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import Sidebar from '@/components/layout/Sidebar.vue';
+import Header from '@/components/layout/Header.vue';
 import KPICard from '@/components/dashboard/KPICard.vue';
 import ManagerViews from '@/components/manager/ManagerViews.vue';
 import { managerKPIs } from '@/data/mockData';
@@ -10,37 +12,43 @@ const breadcrumbs = [
 ];
 ---
 
-<Layout title="Tableau de bord Manager" breadcrumbs={breadcrumbs}>
-  <div class="space-y-6">
-    {/* En-tête */}
-    <div class="flex items-center justify-between">
-      <div>
-        <h1 class="text-2xl font-bold text-slate-900">Tableau de bord Opérations</h1>
-        <p class="text-slate-500 mt-1">Bonjour Marie ! Voici votre vue d'ensemble opérationnelle pour aujourd'hui.</p>
-      </div>
-    </div>
+<Layout title="Tableau de bord Manager">
+  <div class="flex min-h-screen">
+    <Sidebar role="manager" activePath="/manager" client:load />
+    
+    <div class="ml-60 flex-1">
+      <Header 
+        title="Tableau de bord Opérations" 
+        subtitle="Bonjour Marie ! Voici votre vue d'ensemble opérationnelle pour aujourd'hui."
+        currentRole="manager"
+        breadcrumbs={breadcrumbs}
+        client:load
+      />
+      
+      <main class="p-6">
+        {/* Status Banner */}
+        <div class="mb-6 flex items-center gap-2">
+          <div class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
+          <span class="text-sm font-medium text-emerald-600">Tous les Systèmes Opérationnels</span>
+        </div>
 
-    {/* Status Banner */}
-    <div class="flex items-center gap-2">
-      <div class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
-      <span class="text-sm font-medium text-emerald-600">Tous les Systèmes Opérationnels</span>
-    </div>
+        {/* KPI Cards */}
+        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+          {managerKPIs.map((kpi) => (
+            <KPICard 
+              label={kpi.label}
+              value={kpi.value}
+              trend={kpi.trend}
+              trendLabel={kpi.trendLabel}
+              icon={kpi.icon}
+              client:load
+            />
+          ))}
+        </div>
 
-    {/* KPI Cards */}
-    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      {managerKPIs.map((kpi) => (
-        <KPICard 
-          label={kpi.label}
-          value={kpi.value}
-          trend={kpi.trend}
-          trendLabel={kpi.trendLabel}
-          icon={kpi.icon}
-          client:load
-        />
-      ))}
+        {/* Views with Tabs */}
+        <ManagerViews client:load />
+      </main>
     </div>
-
-    {/* Views with Tabs */}
-    <ManagerViews client:load />
   </div>
 </Layout>

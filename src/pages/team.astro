@@ -1,5 +1,7 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import Sidebar from '@/components/layout/Sidebar.vue';
+import Header from '@/components/layout/Header.vue';
 import TeamManager from '@/components/team/TeamManager.vue';
 
 const breadcrumbs = [
@@ -8,15 +10,22 @@ const breadcrumbs = [
 ];
 ---
 
-<Layout title="Gestion Équipe" breadcrumbs={breadcrumbs}>
-  <div class="space-y-6">
-    <div class="flex items-center justify-between">
-      <div>
-        <h1 class="text-2xl font-bold text-slate-900">Gestion de l'Équipe</h1>
-        <p class="text-slate-500 mt-1">Gérez les membres de l'équipe et leurs permissions</p>
-      </div>
-    </div>
+<Layout title="Gestion Équipe">
+  <div class="flex min-h-screen">
+    <Sidebar role="admin" activePath="/team" client:load />
     
-    <TeamManager client:load />
+    <div class="ml-60 flex-1">
+      <Header 
+        title="Gestion de l'Équipe" 
+        subtitle="Gérez les membres de l'équipe et leurs permissions"
+        currentRole="admin"
+        breadcrumbs={breadcrumbs}
+        client:load
+      />
+      
+      <main class="p-6">
+        <TeamManager client:load />
+      </main>
+    </div>
   </div>
 </Layout>

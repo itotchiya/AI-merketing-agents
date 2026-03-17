@@ -1,0 +1,31 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Sidebar from '@/components/layout/Sidebar.vue';
+import Header from '@/components/layout/Header.vue';
+import ExecutifViews from '@/components/executif/ExecutifViews.vue';
+
+const breadcrumbs = [
+  { label: 'Exécutif', href: '/executif' },
+  { label: 'Mes Tâches', href: '/executif/tasks' }
+];
+---
+
+<Layout title="Mes Tâches | Exécutif">
+  <div class="flex min-h-screen">
+    <Sidebar role="executif" activePath="/executif/tasks" client:load />
+    
+    <div class="ml-60 flex-1">
+      <Header 
+        title="Mes Tâches" 
+        subtitle="Vos tâches assignées et en cours"
+        currentRole="executif"
+        breadcrumbs={breadcrumbs}
+        client:load
+      />
+      
+      <main class="p-6">
+        <ExecutifViews client:load />
+      </main>
+    </div>
+  </div>
+</Layout>

@@ -2,29 +2,29 @@
 import Layout from '@/layouts/Layout.astro';
 import Sidebar from '@/components/layout/Sidebar.vue';
 import Header from '@/components/layout/Header.vue';
-import AgentCategoryTabs from '@/components/agents/AgentCategoryTabs.vue';
+import TeamManager from '@/components/team/TeamManager.vue';
 
 const breadcrumbs = [
-  { label: 'Accueil', href: '/' },
-  { label: 'Hub Agents', href: '/agents' }
+  { label: 'Exécutif', href: '/executif' },
+  { label: 'Équipe', href: '/executif/team' }
 ];
 ---
 
-<Layout title="Hub Agents">
+<Layout title="Équipe | Exécutif">
   <div class="flex min-h-screen">
-    <Sidebar role="admin" activePath="/agents" client:load />
+    <Sidebar role="executif" activePath="/executif/team" client:load />
     
     <div class="ml-60 flex-1">
       <Header 
-        title="Hub Agents" 
-        subtitle="Lancez et gérez les agents IA pour vos projets"
-        currentRole="admin"
+        title="Mon Équipe" 
+        subtitle="Membres de l'équipe"
+        currentRole="executif"
         breadcrumbs={breadcrumbs}
         client:load
       />
       
       <main class="p-6">
-        <AgentCategoryTabs client:load />
+        <TeamManager client:load />
       </main>
     </div>
   </div>

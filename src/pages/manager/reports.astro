@@ -5,20 +5,20 @@ import Header from '@/components/layout/Header.vue';
 import ReportCategoryTabs from '@/components/reports/ReportCategoryTabs.vue';
 
 const breadcrumbs = [
-  { label: 'Accueil', href: '/' },
-  { label: 'Rapports', href: '/reports' }
+  { label: 'Manager', href: '/manager' },
+  { label: 'Rapports', href: '/manager/reports' }
 ];
 ---
 
-<Layout title="Rapports">
+<Layout title="Rapports | Manager">
   <div class="flex min-h-screen">
-    <Sidebar role="admin" activePath="/reports" client:load />
+    <Sidebar role="manager" activePath="/manager/reports" client:load />
     
     <div class="ml-60 flex-1">
       <Header 
         title="Rapports" 
-        subtitle="Consultez et téléchargez les rapports de performance"
-        currentRole="admin"
+        subtitle="Consultez les rapports de performance de vos projets"
+        currentRole="manager"
         breadcrumbs={breadcrumbs}
         client:load
       />

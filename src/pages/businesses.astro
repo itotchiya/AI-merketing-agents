@@ -1,5 +1,7 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import Sidebar from '@/components/layout/Sidebar.vue';
+import Header from '@/components/layout/Header.vue';
 import BusinessManager from '@/components/businesses/BusinessManager.vue';
 
 const breadcrumbs = [
@@ -8,15 +10,22 @@ const breadcrumbs = [
 ];
 ---
 
-<Layout title="Gestion Entreprises" breadcrumbs={breadcrumbs}>
-  <div class="space-y-6">
-    <div class="flex items-center justify-between">
-      <div>
-        <h1 class="text-2xl font-bold text-slate-900">Gestion des Entreprises</h1>
-        <p class="text-slate-500 mt-1">Gérez les entreprises multi-locataires et leurs abonnements</p>
-      </div>
-    </div>
+<Layout title="Gestion Entreprises">
+  <div class="flex min-h-screen">
+    <Sidebar role="superadmin" activePath="/businesses" client:load />
     
-    <BusinessManager client:load />
+    <div class="ml-60 flex-1">
+      <Header 
+        title="Gestion des Entreprises" 
+        subtitle="Gérez les entreprises multi-locataires et leurs abonnements"
+        currentRole="superadmin"
+        breadcrumbs={breadcrumbs}
+        client:load
+      />
+      
+      <main class="p-6">
+        <BusinessManager client:load />
+      </main>
+    </div>
   </div>
 </Layout>

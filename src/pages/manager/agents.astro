@@ -5,20 +5,20 @@ import Header from '@/components/layout/Header.vue';
 import AgentCategoryTabs from '@/components/agents/AgentCategoryTabs.vue';
 
 const breadcrumbs = [
-  { label: 'Accueil', href: '/' },
-  { label: 'Hub Agents', href: '/agents' }
+  { label: 'Manager', href: '/manager' },
+  { label: 'Hub Agents', href: '/manager/agents' }
 ];
 ---
 
-<Layout title="Hub Agents">
+<Layout title="Hub Agents | Manager">
   <div class="flex min-h-screen">
-    <Sidebar role="admin" activePath="/agents" client:load />
+    <Sidebar role="manager" activePath="/manager/agents" client:load />
     
     <div class="ml-60 flex-1">
       <Header 
         title="Hub Agents" 
         subtitle="Lancez et gérez les agents IA pour vos projets"
-        currentRole="admin"
+        currentRole="manager"
         breadcrumbs={breadcrumbs}
         client:load
       />

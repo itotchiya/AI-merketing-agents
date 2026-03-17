@@ -5,20 +5,20 @@ import Header from '@/components/layout/Header.vue';
 import ValidationTabs from '@/components/validation/ValidationTabs.vue';
 
 const breadcrumbs = [
-  { label: 'Accueil', href: '/' },
-  { label: 'Validation', href: '/validation' }
+  { label: 'Manager', href: '/manager' },
+  { label: 'Validation', href: '/manager/validation' }
 ];
 ---
 
-<Layout title="Centre de Validation">
+<Layout title="Validation | Manager">
   <div class="flex min-h-screen">
-    <Sidebar role="admin" activePath="/validation" client:load />
+    <Sidebar role="manager" activePath="/manager/validation" client:load />
     
     <div class="ml-60 flex-1">
       <Header 
         title="Centre de Validation" 
         subtitle="Révisez et approuvez les productions des agents IA"
-        currentRole="admin"
+        currentRole="manager"
         breadcrumbs={breadcrumbs}
         client:load
       />

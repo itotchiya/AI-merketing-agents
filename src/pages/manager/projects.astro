@@ -5,20 +5,20 @@ import Header from '@/components/layout/Header.vue';
 import ProjectFilterTabs from '@/components/projects/ProjectFilterTabs.vue';
 
 const breadcrumbs = [
-  { label: 'Accueil', href: '/' },
-  { label: 'Projets', href: '/projects' }
+  { label: 'Manager', href: '/manager' },
+  { label: 'Projets', href: '/manager/projects' }
 ];
 ---
 
-<Layout title="Projets">
+<Layout title="Projets | Manager">
   <div class="flex min-h-screen">
-    <Sidebar role="admin" activePath="/projects" client:load />
+    <Sidebar role="manager" activePath="/manager/projects" client:load />
     
     <div class="ml-60 flex-1">
       <Header 
-        title="Projets" 
-        subtitle="Gérez tous vos projets marketing"
-        currentRole="admin"
+        title="Mes Projets" 
+        subtitle="Gérez vos projets marketing assignés"
+        currentRole="manager"
         breadcrumbs={breadcrumbs}
         client:load
       />

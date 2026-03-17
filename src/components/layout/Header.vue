@@ -2,9 +2,24 @@
   <header class="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-border bg-card px-6">
     <!-- Breadcrumb / Title -->
     <div class="flex flex-1 items-center gap-2">
-      <h1 class="text-xl font-semibold">{{ title }}</h1>
-      <span v-if="subtitle" class="text-muted-foreground">—</span>
-      <p v-if="subtitle" class="text-sm text-muted-foreground">{{ subtitle }}</p>
+      <!-- Breadcrumbs -->
+      <nav v-if="breadcrumbs && breadcrumbs.length > 0" class="flex items-center gap-2 text-sm">
+        <template v-for="(crumb, index) in breadcrumbs" :key="crumb.href">
+          <a 
+            :href="crumb.href" 
+            class="text-muted-foreground hover:text-foreground transition-colors"
+            :class="{ 'font-medium text-foreground': index === breadcrumbs.length - 1 }"
+          >
+            {{ crumb.label }}
+          </a>
+          <span v-if="index < breadcrumbs.length - 1" class="text-muted-foreground">/</span>
+        </template>
+      </nav>
+      <template v-else>
+        <h1 class="text-xl font-semibold">{{ title }}</h1>
+        <span v-if="subtitle" class="text-muted-foreground">—</span>
+        <p v-if="subtitle" class="text-sm text-muted-foreground">{{ subtitle }}</p>
+      </template>
     </div>
 
     <!-- Role Switcher -->
@@ -34,7 +49,7 @@
         class="absolute right-0 top-full mt-2 w-56 rounded-xl border bg-card shadow-lg py-2 z-50"
       >
         <p class="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-          Switch Dashboard
+          Changer de Vue
         </p>
         <a 
           v-for="role in roles" 
@@ -58,7 +73,7 @@
         <div class="my-2 border-t"></div>
         
         <p class="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-          Other Pages
+          Autres Pages
         </p>
         <a 
           v-for="page in otherPages" 
@@ -79,7 +94,7 @@
         <Search class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
         <input
           type="search"
-          placeholder="Search anything..."
+          placeholder="Rechercher..."
           class="h-9 w-64 rounded-lg border border-input bg-background pl-9 pr-4 text-sm outline-none focus:ring-2 focus:ring-ring"
         />
       </div>
@@ -106,32 +121,38 @@ import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { Search, Bell, ChevronDown, Check, FolderKanban, Bot, CheckCircle } from 'lucide-vue-next';
 import Avatar from '@/components/ui/Avatar.vue';
 
+interface Breadcrumb {
+  label: string;
+  href: string;
+}
+
 const props = defineProps<{
   title: string;
   subtitle?: string;
   notificationCount?: number;
   currentRole?: 'superadmin' | 'admin' | 'manager' | 'executif';
+  breadcrumbs?: Breadcrumb[];
 }>();
 
 const isRoleMenuOpen = ref(false);
 const roleMenuRef = ref<HTMLElement | null>(null);
 
 const roles = [
-  { id: 'admin', label: 'Admin Dashboard', href: '/', color: 'bg-blue-500' },
+  { id: 'admin', label: 'Tableau de bord Admin', href: '/', color: 'bg-blue-500' },
   { id: 'superadmin', label: 'SuperAdmin', href: '/superadmin', color: 'bg-purple-500' },
   { id: 'manager', label: 'Manager', href: '/manager', color: 'bg-amber-500' },
   { id: 'executif', label: 'Exécutif', href: '/executif', color: 'bg-green-500' },
 ];
 
 const otherPages = [
-  { label: 'Projects', href: '/projects', icon: FolderKanban },
-  { label: 'Agent Hub', href: '/agents', icon: Bot },
+  { label: 'Projets', href: '/projects', icon: FolderKanban },
+  { label: 'Hub Agents', href: '/agents', icon: Bot },
   { label: 'Validation', href: '/validation', icon: CheckCircle },
 ];
 
 const roleLabel = computed(() => {
   const role = roles.find(r => r.id === props.currentRole);
-  return role?.label || 'Select Role';
+  return role?.label || 'Sélectionner un rôle';
 });
 
 // Close menu when clicking outside
