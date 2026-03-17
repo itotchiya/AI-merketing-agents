@@ -44,7 +44,7 @@
         <Avatar fallback="TA" class="h-9 w-9" />
         <div class="flex-1 min-w-0">
           <p class="text-sm font-medium truncate">{{ userName }}</p>
-          <p class="text-xs text-muted-foreground capitalize">{{ userRole }}</p>
+          <p class="text-xs text-muted-foreground capitalize">{{ userRoleLabel }}</p>
         </div>
         <div class="h-2 w-2 rounded-full bg-green-500" />
       </div>
@@ -116,26 +116,33 @@ const userName = computed(() => {
   }
 });
 
-const userRole = computed(() => props.role || 'admin');
+const userRoleLabel = computed(() => {
+  switch (props.role) {
+    case 'superadmin': return 'Super Admin';
+    case 'manager': return 'Manager';
+    case 'executif': return 'Exécutif';
+    default: return 'Admin';
+  }
+});
 
 // Admin Navigation
 const adminNav: NavSection[] = [
   {
-    title: 'Main',
+    title: 'Principal',
     items: [
-      { label: 'Dashboard', href: '/', icon: LayoutDashboard },
-      { label: 'AI Workflow', href: '/ai-workflow', icon: TrendingUp },
-      { label: 'Projects', href: '/projects', icon: FolderKanban },
-      { label: 'Agent Hub', href: '/agents', icon: Bot },
+      { label: 'Tableau de bord', href: '/', icon: LayoutDashboard },
+      { label: 'Workflow IA', href: '/ai-workflow', icon: TrendingUp },
+      { label: 'Projets', href: '/projects', icon: FolderKanban },
+      { label: 'Hub Agents', href: '/agents', icon: Bot },
       { label: 'Validation', href: '/validation', icon: CheckCircle, badge: 3 },
-      { label: 'Reports', href: '/reports', icon: BarChart3 },
+      { label: 'Rapports', href: '/reports', icon: BarChart3 },
     ]
   },
   {
-    title: 'Team',
+    title: 'Équipe',
     items: [
-      { label: 'Team Members', href: '/team', icon: Users },
-      { label: 'Settings', href: '/settings', icon: Settings },
+      { label: 'Membres', href: '/team', icon: Users },
+      { label: 'Paramètres', href: '/settings', icon: Settings },
     ]
   }
 ];
@@ -143,19 +150,19 @@ const adminNav: NavSection[] = [
 // SuperAdmin Navigation
 const superAdminNav: NavSection[] = [
   {
-    title: 'Platform',
+    title: 'Plateforme',
     items: [
-      { label: 'Dashboard', href: '/superadmin', icon: LayoutDashboard },
-      { label: 'Businesses', href: '/businesses', icon: Building2 },
-      { label: 'System Health', href: '/health', icon: HeartPulse },
+      { label: 'Tableau de bord', href: '/superadmin', icon: LayoutDashboard },
+      { label: 'Entreprises', href: '/businesses', icon: Building2 },
+      { label: 'Santé Système', href: '/health', icon: HeartPulse },
     ]
   },
   {
-    title: 'Management',
+    title: 'Gestion',
     items: [
-      { label: 'Users', href: '/users', icon: Users },
-      { label: 'Audit Logs', href: '/audit', icon: Shield },
-      { label: 'Settings', href: '/settings', icon: Settings },
+      { label: 'Utilisateurs', href: '/users', icon: Users },
+      { label: 'Journaux d\'audit', href: '/audit', icon: Shield },
+      { label: 'Paramètres', href: '/settings', icon: Settings },
     ]
   }
 ];
@@ -163,20 +170,20 @@ const superAdminNav: NavSection[] = [
 // Manager Navigation
 const managerNav: NavSection[] = [
   {
-    title: 'Operations',
+    title: 'Opérations',
     items: [
-      { label: 'Dashboard', href: '/manager', icon: LayoutDashboard },
-      { label: 'My Tasks', href: '/manager?view=tasks', icon: ClipboardList },
-      { label: 'Agent Hub', href: '/agents', icon: Bot },
+      { label: 'Tableau de bord', href: '/manager', icon: LayoutDashboard },
+      { label: 'Mes Tâches', href: '/manager?view=tasks', icon: ClipboardList },
+      { label: 'Hub Agents', href: '/agents', icon: Bot },
       { label: 'Validation', href: '/validation', icon: CheckCircle, badge: 2 },
     ]
   },
   {
-    title: 'Insights',
+    title: 'Analyses',
     items: [
-      { label: 'Reports', href: '/reports', icon: BarChart3 },
-      { label: 'Team', href: '/team', icon: Users },
-      { label: 'Settings', href: '/settings', icon: Settings },
+      { label: 'Rapports', href: '/reports', icon: BarChart3 },
+      { label: 'Équipe', href: '/team', icon: Users },
+      { label: 'Paramètres', href: '/settings', icon: Settings },
     ]
   }
 ];
@@ -184,19 +191,19 @@ const managerNav: NavSection[] = [
 // Exécutif Navigation
 const executifNav: NavSection[] = [
   {
-    title: 'Work',
+    title: 'Travail',
     items: [
-      { label: 'My Tasks', href: '/executif', icon: ClipboardList },
-      { label: 'Current Task', href: '/executif?tab=current', icon: Briefcase },
-      { label: 'My Agents', href: '/agents', icon: Bot },
+      { label: 'Mes Tâches', href: '/executif', icon: ClipboardList },
+      { label: 'Tâche en cours', href: '/executif?tab=current', icon: Briefcase },
+      { label: 'Mes Agents', href: '/agents', icon: Bot },
     ]
   },
   {
     title: 'Performance',
     items: [
-      { label: 'My Stats', href: '/executif?tab=performance', icon: LineChart },
-      { label: 'Team', href: '/team', icon: Users },
-      { label: 'Settings', href: '/settings', icon: Settings },
+      { label: 'Mes Stats', href: '/executif?tab=performance', icon: LineChart },
+      { label: 'Équipe', href: '/team', icon: Users },
+      { label: 'Paramètres', href: '/settings', icon: Settings },
     ]
   }
 ];

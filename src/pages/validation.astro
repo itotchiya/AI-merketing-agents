@@ -1,27 +1,22 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import Sidebar from '@/components/layout/Sidebar.vue';
-import Header from '@/components/layout/Header.vue';
 import ValidationTabs from '@/components/validation/ValidationTabs.vue';
 
-const title = 'Validation Center | MOS';
+const breadcrumbs = [
+  { label: 'Accueil', href: '/' },
+  { label: 'Validation', href: '/validation' }
+];
 ---
 
-<Layout title={title}>
-  <div class="flex min-h-screen">
-    <Sidebar role="admin" activePath="/validation" client:load />
-    
-    <div class="ml-60 flex-1">
-      <Header 
-        title="Validation Center" 
-        subtitle="Review and approve agent outputs"
-        currentRole="admin"
-        client:load
-      />
-      
-      <main class="p-6">
-        <ValidationTabs client:load />
-      </main>
+<Layout title="Centre de Validation" breadcrumbs={breadcrumbs}>
+  <div class="space-y-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-900">Centre de Validation</h1>
+        <p class="text-slate-500 mt-1">Révisez et approuvez les productions des agents IA</p>
+      </div>
     </div>
+    
+    <ValidationTabs client:load />
   </div>
 </Layout>

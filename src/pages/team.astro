@@ -1,27 +1,22 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import Sidebar from '@/components/layout/Sidebar.vue';
-import Header from '@/components/layout/Header.vue';
 import TeamManager from '@/components/team/TeamManager.vue';
 
-const title = 'Team | MOS';
+const breadcrumbs = [
+  { label: 'Accueil', href: '/' },
+  { label: 'Équipe', href: '/team' }
+];
 ---
 
-<Layout title={title}>
-  <div class="flex min-h-screen">
-    <Sidebar role="admin" activePath="/team" client:load />
-    
-    <div class="ml-60 flex-1">
-      <Header 
-        title="Team Management" 
-        subtitle="Manage team members and their permissions"
-        currentRole="admin"
-        client:load
-      />
-      
-      <main class="p-6">
-        <TeamManager client:load />
-      </main>
+<Layout title="Gestion Équipe" breadcrumbs={breadcrumbs}>
+  <div class="space-y-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-900">Gestion de l'Équipe</h1>
+        <p class="text-slate-500 mt-1">Gérez les membres de l'équipe et leurs permissions</p>
+      </div>
     </div>
+    
+    <TeamManager client:load />
   </div>
 </Layout>

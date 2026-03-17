@@ -1,27 +1,22 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import Sidebar from '@/components/layout/Sidebar.vue';
-import Header from '@/components/layout/Header.vue';
 import AgentCategoryTabs from '@/components/agents/AgentCategoryTabs.vue';
 
-const title = 'Agent Hub | MOS';
+const breadcrumbs = [
+  { label: 'Accueil', href: '/' },
+  { label: 'Hub Agents', href: '/agents' }
+];
 ---
 
-<Layout title={title}>
-  <div class="flex min-h-screen">
-    <Sidebar role="admin" activePath="/agents" client:load />
-    
-    <div class="ml-60 flex-1">
-      <Header 
-        title="Agent Hub" 
-        subtitle="Launch and manage AI agents for your projects"
-        currentRole="admin"
-        client:load
-      />
-      
-      <main class="p-6">
-        <AgentCategoryTabs client:load />
-      </main>
+<Layout title="Hub Agents" breadcrumbs={breadcrumbs}>
+  <div class="space-y-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-900">Hub Agents</h1>
+        <p class="text-slate-500 mt-1">Lancez et gérez les agents IA pour vos projets</p>
+      </div>
     </div>
+    
+    <AgentCategoryTabs client:load />
   </div>
 </Layout>

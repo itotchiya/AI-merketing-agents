@@ -1,27 +1,22 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import Sidebar from '@/components/layout/Sidebar.vue';
-import Header from '@/components/layout/Header.vue';
 import BusinessManager from '@/components/businesses/BusinessManager.vue';
 
-const title = 'Businesses | MOS';
+const breadcrumbs = [
+  { label: 'Accueil', href: '/' },
+  { label: 'Entreprises', href: '/businesses' }
+];
 ---
 
-<Layout title={title}>
-  <div class="flex min-h-screen">
-    <Sidebar role="superadmin" activePath="/businesses" client:load />
-    
-    <div class="ml-60 flex-1">
-      <Header 
-        title="Business Management" 
-        subtitle="Manage multi-tenant businesses and their subscriptions"
-        currentRole="superadmin"
-        client:load
-      />
-      
-      <main class="p-6">
-        <BusinessManager client:load />
-      </main>
+<Layout title="Gestion Entreprises" breadcrumbs={breadcrumbs}>
+  <div class="space-y-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-900">Gestion des Entreprises</h1>
+        <p class="text-slate-500 mt-1">Gérez les entreprises multi-locataires et leurs abonnements</p>
+      </div>
     </div>
+    
+    <BusinessManager client:load />
   </div>
 </Layout>

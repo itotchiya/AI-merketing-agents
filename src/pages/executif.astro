@@ -1,44 +1,40 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import Sidebar from '@/components/layout/Sidebar.vue';
-import Header from '@/components/layout/Header.vue';
 import KPICard from '@/components/dashboard/KPICard.vue';
 import ExecutifViews from '@/components/executif/ExecutifViews.vue';
 import { executifKPIs } from '@/data/mockData';
 
-const title = 'Exécutif Dashboard | MOS';
+const breadcrumbs = [
+  { label: 'Accueil', href: '/' },
+  { label: 'Espace de Travail', href: '/executif' }
+];
 ---
 
-<Layout title={title}>
-  <div class="flex min-h-screen">
-    <Sidebar role="executif" activePath="/executif" client:load />
-    
-    <div class="ml-60 flex-1">
-      <Header 
-        title="My Workspace" 
-        subtitle="Bonjour Pierre! Here's your focus for today."
-        currentRole="executif"
-        client:load
-      />
-      
-      <main class="p-6">
-        {/* KPI Cards */}
-        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
-          {executifKPIs.map((kpi) => (
-            <KPICard 
-              label={kpi.label}
-              value={kpi.value}
-              trend={kpi.trend}
-              trendLabel={kpi.trendLabel}
-              icon={kpi.icon}
-              client:load
-            />
-          ))}
-        </div>
-
-        {/* Views with Tabs */}
-        <ExecutifViews client:load />
-      </main>
+<Layout title="Mon Espace de Travail" breadcrumbs={breadcrumbs}>
+  <div class="space-y-6">
+    {/* En-tête */}
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-900">Mon Espace de Travail</h1>
+        <p class="text-slate-500 mt-1">Bonjour Pierre ! Voici votre focus pour aujourd'hui.</p>
+      </div>
     </div>
+
+    {/* KPI Cards */}
+    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      {executifKPIs.map((kpi) => (
+        <KPICard 
+          label={kpi.label}
+          value={kpi.value}
+          trend={kpi.trend}
+          trendLabel={kpi.trendLabel}
+          icon={kpi.icon}
+          client:load
+        />
+      ))}
+    </div>
+
+    {/* Views with Tabs */}
+    <ExecutifViews client:load />
   </div>
 </Layout>

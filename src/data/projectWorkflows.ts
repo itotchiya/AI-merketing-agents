@@ -99,7 +99,7 @@ export const summerLaunchWorkflow: ProjectWorkflow = {
       id: 2,
       name: 'Phase 2: Strategy & Planning',
       subtitle: 'Quarterly Review',
-      agent: 'Agent IA Stratégie',
+      agent: 'Agent IA Stratégie + Orchestrateur',
       frequency: '90 days',
       frequencyType: 'quarterly',
       status: 'active',
@@ -108,7 +108,7 @@ export const summerLaunchWorkflow: ProjectWorkflow = {
       icon: 'Target',
       lastRun: '2024-03-01',
       nextRun: '2024-06-01',
-      progress: 75,
+      progress: 60,
       steps: [
         { 
           id: 'p2s1', 
@@ -134,10 +134,19 @@ export const summerLaunchWorkflow: ProjectWorkflow = {
         { 
           id: 'p2s4', 
           name: 'Plan d\'action Marketing', 
-          status: 'waiting_approval', 
+          status: 'pending', 
           duration: '3h',
           approvalPoint: true, 
           output: 'Schéma de vente Q2 2024'
+        },
+        { 
+          id: 'p2s5', 
+          name: 'Calendrier Planning (90 days)', 
+          status: 'pending', 
+          duration: '2h',
+          approvalPoint: true, 
+          output: 'Editorial calendar - 90 days scheduled',
+          agent: 'Agent IA Orchestrateur'
         },
       ],
       decision: { type: 'completion', status: 'pending', label: 'Awaiting Approval' }
@@ -145,8 +154,8 @@ export const summerLaunchWorkflow: ProjectWorkflow = {
     {
       id: 3,
       name: 'Phase 3: Daily Execution',
-      subtitle: 'Autonomous Operations',
-      agent: 'Multi-Agent Orchestration',
+      subtitle: 'Autonomous Operations (Based on Phase 2 Calendar)',
+      agent: 'Multi-Agent Execution',
       frequency: 'Daily',
       frequencyType: 'daily',
       status: 'pending',
@@ -155,19 +164,19 @@ export const summerLaunchWorkflow: ProjectWorkflow = {
       icon: 'Zap',
       progress: 0,
       subAgents: [
-        { name: 'Orchestrateur Éditorial', status: 'pending', task: 'Calendar Planning', output: 'Calendrier planning' },
-        { name: 'Agent IA Advertising', status: 'pending', task: 'Campaign Strategy', output: 'Calendrier éditorial' },
-        { name: 'Studio Créatif', status: 'pending', task: 'Content Creation', output: 'Création de contenu' },
-        { name: 'Community Manager', status: 'pending', task: 'Organic Community', output: 'Engagement' },
+        { name: 'Agent IA Advertising', status: 'pending', task: 'Execute Campaigns', output: 'Ads launched daily' },
+        { name: 'Studio Créatif', status: 'pending', task: 'Create Daily Content', output: 'Posts & visuals' },
+        { name: 'Community Manager', status: 'pending', task: 'Engage Community', output: 'Replies & interactions' },
+        { name: 'Email Marketer', status: 'pending', task: 'Send Scheduled Emails', output: 'Newsletters sent' },
       ],
       steps: [
-        { id: 'p3s1', name: 'Calendar Planning', status: 'pending', duration: 'Daily', approvalPoint: true },
-        { id: 'p3s2', name: 'Content Creation', status: 'pending', duration: 'Daily' },
-        { id: 'p3s3', name: 'Campaign Execution', status: 'pending', duration: 'Daily' },
-        { id: 'p3s4', name: 'Distribution', status: 'pending', duration: 'Scheduled' },
+        { id: 'p3s1', name: 'Daily Content Creation', status: 'pending', duration: 'Daily' },
+        { id: 'p3s2', name: 'Campaign Execution', status: 'pending', duration: 'Daily' },
+        { id: 'p3s3', name: 'Social Distribution', status: 'pending', duration: 'Scheduled' },
+        { id: 'p3s4', name: 'Community Engagement', status: 'pending', duration: 'Continuous' },
         { id: 'p3s5', name: 'Reporting & Control', status: 'pending', duration: 'Real-time', feedback: true },
       ],
-      feedbackLoop: 'Rectification automatique'
+      feedbackLoop: 'Rectification automatique - Based on 90-day calendar from Phase 2'
     }
   ]
 };
@@ -213,7 +222,7 @@ export const productBetaWorkflow: ProjectWorkflow = {
       id: 2,
       name: 'Phase 2: Strategy & Planning',
       subtitle: 'Quarterly Review',
-      agent: 'Agent IA Stratégie',
+      agent: 'Agent IA Stratégie + Orchestrateur',
       frequency: '90 days',
       frequencyType: 'quarterly',
       status: 'completed',
@@ -246,14 +255,24 @@ export const productBetaWorkflow: ProjectWorkflow = {
           approvedBy: 'Thomas Dubois',
           approvalTime: '2024-02-03'
         },
+        { 
+          id: 'p2s5', 
+          name: 'Calendrier Planning (90 days)', 
+          status: 'completed', 
+          duration: '2h',
+          approvalPoint: true, 
+          output: '90-day beta campaign calendar',
+          approvedBy: 'Marie Laurent',
+          approvalTime: '2024-02-04'
+        },
       ],
       decision: { type: 'completion', status: 'go', label: 'Strategy Approved' }
     },
     {
       id: 3,
       name: 'Phase 3: Daily Execution',
-      subtitle: 'Autonomous Operations',
-      agent: 'Multi-Agent Orchestration',
+      subtitle: 'Autonomous Operations (Based on Phase 2 Calendar)',
+      agent: 'Multi-Agent Execution',
       frequency: 'Daily',
       frequencyType: 'daily',
       status: 'running',
@@ -264,19 +283,19 @@ export const productBetaWorkflow: ProjectWorkflow = {
       nextRun: 'Tomorrow 06:00',
       progress: 65,
       subAgents: [
-        { name: 'Orchestrateur Éditorial', status: 'completed', task: 'Calendar Planning', output: 'Calendrier planning', lastRun: '06:00', nextRun: 'Tomorrow 06:00' },
-        { name: 'Agent IA Advertising', status: 'running', task: 'Beta Ads Optimization', output: 'Lead generation', lastRun: '09:30', nextRun: 'Continuous' },
-        { name: 'Studio Créatif', status: 'completed', task: 'Landing Page Assets', output: 'Visual content', lastRun: '10:00', nextRun: 'On demand' },
+        { name: 'Agent IA Advertising', status: 'running', task: 'Execute Beta Ads', output: 'Lead generation', lastRun: '09:30', nextRun: 'Continuous' },
+        { name: 'Studio Créatif', status: 'completed', task: 'Create Daily Content', output: 'Visual content', lastRun: '10:00', nextRun: 'Scheduled' },
         { name: 'Community Manager', status: 'running', task: 'Beta User Engagement', output: 'Support & feedback', lastRun: 'Continuous', nextRun: 'Continuous' },
+        { name: 'Email Marketer', status: 'running', task: 'Send Beta Updates', output: 'User onboarding', lastRun: '14:00', nextRun: 'Scheduled' },
       ],
       steps: [
-        { id: 'p3s1', name: 'Calendar Planning', status: 'completed', duration: 'Daily', approvalPoint: true },
-        { id: 'p3s2', name: 'Content Creation', status: 'completed', duration: 'Daily' },
-        { id: 'p3s3', name: 'Campaign Execution', status: 'running', duration: 'Daily' },
-        { id: 'p3s4', name: 'Distribution', status: 'running', duration: 'Scheduled' },
+        { id: 'p3s1', name: 'Daily Content Creation', status: 'completed', duration: 'Daily' },
+        { id: 'p3s2', name: 'Campaign Execution', status: 'running', duration: 'Daily' },
+        { id: 'p3s3', name: 'Social Distribution', status: 'running', duration: 'Scheduled' },
+        { id: 'p3s4', name: 'Community Engagement', status: 'running', duration: 'Continuous' },
         { id: 'p3s5', name: 'Reporting & Control', status: 'running', duration: 'Real-time', feedback: true },
       ],
-      feedbackLoop: 'Rectification automatique - A/B testing active'
+      feedbackLoop: 'Rectification automatique - Based on 90-day calendar from Phase 2'
     }
   ]
 };
@@ -322,7 +341,7 @@ export const q1NewsletterWorkflow: ProjectWorkflow = {
       id: 2,
       name: 'Phase 2: Strategy & Planning',
       subtitle: 'Quarterly Review',
-      agent: 'Agent IA Stratégie',
+      agent: 'Agent IA Stratégie + Orchestrateur',
       frequency: '90 days',
       frequencyType: 'quarterly',
       status: 'active',
@@ -331,7 +350,7 @@ export const q1NewsletterWorkflow: ProjectWorkflow = {
       icon: 'Target',
       lastRun: '2024-03-01',
       nextRun: '2024-06-01',
-      progress: 50,
+      progress: 40,
       steps: [
         { 
           id: 'p2s1', 
@@ -353,14 +372,22 @@ export const q1NewsletterWorkflow: ProjectWorkflow = {
           approvalPoint: true, 
           output: 'Newsletter Content Plan'
         },
+        { 
+          id: 'p2s5', 
+          name: 'Calendrier Planning (90 days)', 
+          status: 'pending', 
+          duration: '2h',
+          approvalPoint: true, 
+          output: 'Quarterly newsletter schedule'
+        },
       ],
       decision: { type: 'completion', status: 'pending', label: 'Planning in Progress' }
     },
     {
       id: 3,
       name: 'Phase 3: Daily Execution',
-      subtitle: 'Autonomous Operations',
-      agent: 'Multi-Agent Orchestration',
+      subtitle: 'Autonomous Operations (Based on Phase 2 Calendar)',
+      agent: 'Multi-Agent Execution',
       frequency: 'Daily',
       frequencyType: 'daily',
       status: 'locked',
@@ -369,17 +396,17 @@ export const q1NewsletterWorkflow: ProjectWorkflow = {
       icon: 'Zap',
       progress: 0,
       subAgents: [
-        { name: 'Orchestrateur Éditorial', status: 'idle', task: 'Waiting for strategy', output: 'Calendrier planning' },
-        { name: 'Agent IA Copywriting', status: 'idle', task: 'Newsletter content', output: 'Email copy' },
-        { name: 'Studio Créatif', status: 'idle', task: 'Template design', output: 'Newsletter template' },
+        { name: 'Agent IA Copywriting', status: 'idle', task: 'Write newsletter content', output: 'Email copy' },
+        { name: 'Studio Créatif', status: 'idle', task: 'Design newsletter', output: 'Newsletter template' },
+        { name: 'Email Marketer', status: 'idle', task: 'Send scheduled emails', output: 'Newsletters sent' },
       ],
       steps: [
-        { id: 'p3s1', name: 'Calendar Planning', status: 'pending', duration: 'Daily', approvalPoint: true },
-        { id: 'p3s2', name: 'Content Creation', status: 'pending', duration: 'Daily' },
+        { id: 'p3s1', name: 'Content Writing', status: 'pending', duration: 'Daily' },
+        { id: 'p3s2', name: 'Template Design', status: 'pending', duration: 'As needed' },
         { id: 'p3s3', name: 'Email Distribution', status: 'pending', duration: 'Scheduled' },
         { id: 'p3s4', name: 'Analytics & Reporting', status: 'pending', duration: 'Real-time', feedback: true },
       ],
-      feedbackLoop: 'Rectification automatique'
+      feedbackLoop: 'Rectification automatique - Based on 90-day calendar from Phase 2'
     }
   ]
 };
@@ -425,7 +452,7 @@ export const winterCampaignWorkflow: ProjectWorkflow = {
       id: 2,
       name: 'Phase 2: Strategy & Planning',
       subtitle: 'Quarterly Review',
-      agent: 'Agent IA Stratégie',
+      agent: 'Agent IA Stratégie + Orchestrateur',
       frequency: '90 days',
       frequencyType: 'quarterly',
       status: 'completed',
@@ -457,14 +484,24 @@ export const winterCampaignWorkflow: ProjectWorkflow = {
           approvedBy: 'Thomas Dubois',
           approvalTime: '2023-11-03'
         },
+        { 
+          id: 'p2s5', 
+          name: 'Calendrier Planning (90 days)', 
+          status: 'completed', 
+          duration: '2h',
+          approvalPoint: true, 
+          output: 'Holiday season editorial calendar',
+          approvedBy: 'Marie Laurent',
+          approvalTime: '2023-11-04'
+        },
       ],
       decision: { type: 'completion', status: 'go', label: 'Strategy Approved' }
     },
     {
       id: 3,
       name: 'Phase 3: Daily Execution',
-      subtitle: 'Autonomous Operations',
-      agent: 'Multi-Agent Orchestration',
+      subtitle: 'Autonomous Operations (Based on Phase 2 Calendar)',
+      agent: 'Multi-Agent Execution',
       frequency: 'Daily',
       frequencyType: 'daily',
       status: 'completed',
@@ -474,19 +511,19 @@ export const winterCampaignWorkflow: ProjectWorkflow = {
       lastRun: '2024-02-28',
       progress: 100,
       subAgents: [
-        { name: 'Orchestrateur Éditorial', status: 'completed', task: 'Calendar completed', output: 'Full calendar executed' },
-        { name: 'Agent IA Advertising', status: 'completed', task: 'Campaign ended', output: '2.4M impressions, 45K clicks' },
-        { name: 'Studio Créatif', status: 'completed', task: 'All assets delivered', output: '20 promotional assets' },
-        { name: 'Community Manager', status: 'completed', task: 'Engagement complete', output: '12K interactions' },
+        { name: 'Agent IA Advertising', status: 'completed', task: 'Execute holiday ads', output: '2.4M impressions, 45K clicks' },
+        { name: 'Studio Créatif', status: 'completed', task: 'Create daily content', output: '20 promotional assets' },
+        { name: 'Community Manager', status: 'completed', task: 'Engage audience', output: '12K interactions' },
+        { name: 'Email Marketer', status: 'completed', task: 'Send promotions', output: '42% open rate' },
       ],
       steps: [
-        { id: 'p3s1', name: 'Calendar Planning', status: 'completed', duration: 'Daily', approvalPoint: true },
-        { id: 'p3s2', name: 'Content Creation', status: 'completed', duration: 'Daily' },
-        { id: 'p3s3', name: 'Campaign Execution', status: 'completed', duration: 'Daily' },
-        { id: 'p3s4', name: 'Distribution', status: 'completed', duration: 'Scheduled' },
+        { id: 'p3s1', name: 'Daily Content Creation', status: 'completed', duration: 'Daily' },
+        { id: 'p3s2', name: 'Campaign Execution', status: 'completed', duration: 'Daily' },
+        { id: 'p3s3', name: 'Social Distribution', status: 'completed', duration: 'Scheduled' },
+        { id: 'p3s4', name: 'Community Engagement', status: 'completed', duration: 'Continuous' },
         { id: 'p3s5', name: 'Reporting & Control', status: 'completed', duration: 'Real-time', feedback: true },
       ],
-      feedbackLoop: 'Rectification automatique - Final ROI: 340%'
+      feedbackLoop: 'Rectification automatique - Based on 90-day calendar from Phase 2 - Final ROI: 340%'
     }
   ]
 };
