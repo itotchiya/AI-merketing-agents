@@ -1,0 +1,158 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Sidebar from '@/components/layout/Sidebar.vue';
+import Header from '@/components/layout/Header.vue';
+
+const breadcrumbs = [
+  { label: 'Manager', href: '/manager' },
+  { label: 'Gestion Exécutifs', href: '/manager/executifs' }
+];
+
+const executifs = [
+  { id: 1, name: 'Pierre Martin', email: 'pierre@mos.ai', tasksCompleted: 45, status: 'active', added: '15 Jan 2024' },
+  { id: 2, name: 'Jean Dupont', email: 'jean@mos.ai', tasksCompleted: 32, status: 'active', added: '1 Fév 2024' },
+  { id: 3, name: 'Alice Moreau', email: 'alice@mos.ai', tasksCompleted: 0, status: 'pending', added: '10 Mar 2024' },
+];
+---
+
+<Layout title="Gestion Exécutifs | Manager">
+  <div class="flex min-h-screen">
+    <Sidebar role="manager" activePath="/manager/executifs" client:load />
+    
+    <div class="ml-60 flex-1">
+      <Header 
+        title="Gestion des Exécutifs" 
+        subtitle="Ajoutez et gérez les exécutifs de votre équipe"
+        currentRole="manager"
+        breadcrumbs={breadcrumbs}
+        client:load
+      />
+      
+      <main class="p-6">
+        <!-- Actions -->
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center gap-2">
+            <input 
+              type="search" 
+              placeholder="Rechercher un exécutif..."
+              class="h-10 w-72 rounded-lg border border-slate-200 bg-white px-4 text-sm"
+            />
+          </div>
+          <button class="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium flex items-center gap-2 hover:bg-emerald-700 transition-colors">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Ajouter un Exécutif
+          </button>
+        </div>
+
+        <!-- Executifs List -->
+        <div class="rounded-xl border border-slate-200 bg-white overflow-hidden">
+          <table class="w-full">
+            <thead class="bg-slate-50 border-b border-slate-100">
+              <tr>
+                <th class="px-6 py-4 text-left text-sm font-medium text-slate-500">Exécutif</th>
+                <th class="px-6 py-4 text-left text-sm font-medium text-slate-500">Tâches terminées</th>
+                <th class="px-6 py-4 text-left text-sm font-medium text-slate-500">Statut</th>
+                <th class="px-6 py-4 text-left text-sm font-medium text-slate-500">Date d'ajout</th>
+                <th class="px-6 py-4 text-left text-sm font-medium text-slate-500">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              {executifs.map((executif) => (
+                <tr class="hover:bg-slate-50 transition-colors">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-medium">
+                        {executif.name.charAt(0)}
+                      </div>
+                      <div>
+                        <p class="font-medium text-slate-900">{executif.name}</p>
+                        <p class="text-sm text-slate-500">{executif.email}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span class="text-sm text-slate-700">{executif.tasksCompleted} tâches</span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span class={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
+                      executif.status === 'active' 
+                        ? 'bg-emerald-100 text-emerald-700' 
+                        : 'bg-amber-100 text-amber-700'
+                    }`}>
+                      {executif.status === 'active' ? 'Actif' : 'En attente'}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-slate-500">{executif.added}</td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                      <button class="text-sm text-emerald-600 hover:text-emerald-700 font-medium">Modifier</button>
+                      <button class="text-sm text-red-600 hover:text-red-700 font-medium">Retirer</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Daily Tasks Assignment -->
+        <div class="mt-8 rounded-xl border border-slate-200 bg-white p-6">
+          <h3 class="text-lg font-semibold mb-4">Assignation des Tâches Quotidiennes</h3>
+          <p class="text-sm text-slate-500 mb-4">Affectez les agents quotidiens aux exécutifs</p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-medium text-sm">Agent IA Ads Manager</span>
+                <span class="text-xs px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full">Assigné</span>
+              </div>
+              <select class="w-full h-9 rounded-lg border border-slate-200 bg-white px-3 text-sm">
+                <option>Pierre Martin</option>
+                <option>Jean Dupont</option>
+                <option>Non assigné</option>
+              </select>
+            </div>
+            
+            <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-medium text-sm">Agent IA Création de contenu</span>
+                <span class="text-xs px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full">Assigné</span>
+              </div>
+              <select class="w-full h-9 rounded-lg border border-slate-200 bg-white px-3 text-sm">
+                <option>Jean Dupont</option>
+                <option>Pierre Martin</option>
+                <option>Non assigné</option>
+              </select>
+            </div>
+            
+            <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-medium text-sm">Agent IA Email Marketing</span>
+                <span class="text-xs px-2 py-1 bg-amber-100 text-amber-700 rounded-full">En attente</span>
+              </div>
+              <select class="w-full h-9 rounded-lg border border-slate-200 bg-white px-3 text-sm">
+                <option>Non assigné</option>
+                <option>Pierre Martin</option>
+                <option>Jean Dupont</option>
+              </select>
+            </div>
+            
+            <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-medium text-sm">Agent IA Community Manager</span>
+                <span class="text-xs px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full">Assigné</span>
+              </div>
+              <select class="w-full h-9 rounded-lg border border-slate-200 bg-white px-3 text-sm">
+                <option>Alice Moreau</option>
+                <option>Pierre Martin</option>
+                <option>Jean Dupont</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</Layout>

@@ -1,0 +1,146 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Sidebar from '@/components/layout/Sidebar.vue';
+import Header from '@/components/layout/Header.vue';
+
+const breadcrumbs = [
+  { label: 'Exécutif', href: '/executif' },
+  { label: 'Validation Quotidienne', href: '/executif/validation' }
+];
+
+// Only DAILY agent validations for Executif
+const dailyValidations = [
+  {
+    id: 1,
+    agent: 'Agent IA Ads Manager',
+    task: 'Campagne Meta Ads - Création du jour',
+    project: 'Lancement Été 2026',
+    submittedAt: 'il y a 30 min',
+    type: 'Création publicitaire',
+    status: 'pending'
+  },
+  {
+    id: 2,
+    agent: 'Agent IA Email Marketing',
+    task: 'Newsletter du jour - Brouillon',
+    project: 'Newsletter T1',
+    submittedAt: 'il y a 1 heure',
+    type: 'Email',
+    status: 'pending'
+  },
+  {
+    id: 3,
+    agent: 'Agent IA Community Manager',
+    task: 'Posts LinkedIn - Journée du 15 Mars',
+    project: 'Lancement Été 2026',
+    submittedAt: 'il y a 2 heures',
+    type: 'Social Media',
+    status: 'approved'
+  },
+];
+---
+
+<Layout title="Validation Quotidienne | Exécutif">
+  <div class="flex min-h-screen">
+    <Sidebar role="executif" activePath="/executif/validation" client:load />
+    
+    <div class="ml-60 flex-1">
+      <Header 
+        title="Validation Quotidienne" 
+        subtitle="Approuvez les tâches des agents d'exécution quotidienne uniquement"
+        currentRole="executif"
+        breadcrumbs={breadcrumbs}
+        client:load
+      />
+      
+      <main class="p-6">
+        <!-- Info Banner -->
+        <div class="mb-6 p-4 rounded-lg bg-blue-50 border border-blue-200">
+          <div class="flex items-start gap-3">
+            <svg class="h-5 w-5 text-blue-600 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <p class="font-medium text-blue-900">Votre périmètre de validation</p>
+              <p class="text-sm text-blue-700">Vous pouvez uniquement valider les tâches des agents quotidiens (Ads, Email, Contenu, Community). Les phases stratégiques (2-5 ans et 90 jours) sont validées par votre manager.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pending Validations -->
+        <div class="rounded-xl border border-slate-200 bg-white overflow-hidden mb-6">
+          <div class="p-4 border-b border-slate-100 bg-slate-50">
+            <h2 class="font-semibold text-slate-900">En attente de validation ({dailyValidations.filter(v => v.status === 'pending').length})</h2>
+          </div>
+          
+          <div class="divide-y divide-slate-100">
+            {dailyValidations.filter(v => v.status === 'pending').map((item) => (
+              <div class="p-6 hover:bg-slate-50 transition-colors">
+                <div class="flex items-start justify-between">
+                  <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-2">
+                      <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                        {item.agent.replace('Agent IA ', '')}
+                      </span>
+                      <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
+                        {item.type}
+                      </span>
+                      <span class="text-xs text-slate-500">{item.submittedAt}</span>
+                    </div>
+                    
+                    <h3 class="font-medium text-slate-900 mb-1">{item.task}</h3>
+                    <p class="text-sm text-slate-500">Projet: {item.project}</p>
+                    
+                    {/* Preview placeholder */}
+                    <div class="mt-4 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                      <p class="text-sm text-slate-600 italic">Aperçu du contenu généré par l'agent...</p>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-center gap-2 ml-4">
+                    <button class="px-4 py-2 rounded-lg border border-red-200 text-red-600 text-sm font-medium hover:bg-red-50 transition-colors">
+                      Rejeter
+                    </button>
+                    <button class="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition-colors">
+                      Approuver
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* History */}
+        <div class="rounded-xl border border-slate-200 bg-white overflow-hidden">
+          <div class="p-4 border-b border-slate-100 bg-slate-50">
+            <h2 class="font-semibold text-slate-900">Historique des validations</h2>
+          </div>
+          
+          <div class="divide-y divide-slate-100">
+            {dailyValidations.filter(v => v.status === 'approved').map((item) => (
+              <div class="p-4 hover:bg-slate-50 transition-colors">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                      <svg class="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p class="font-medium text-slate-900">{item.task}</p>
+                      <p class="text-sm text-slate-500">{item.agent} • {item.project}</p>
+                    </div>
+                  </div>
+                  <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">
+                    Approuvé
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</Layout>

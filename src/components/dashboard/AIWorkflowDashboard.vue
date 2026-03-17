@@ -1,173 +1,100 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import Badge from '@/components/ui/Badge.vue';
-import Button from '@/components/ui/Button.vue';
 import { 
-  RefreshCw, 
-  CheckCircle2, 
-  AlertCircle, 
   Clock,
   Bot,
   ChevronRight,
-  ArrowRight,
   TrendingUp,
   BarChart3,
-  Target
+  Target,
+  CheckCircle2,
+  ArrowRight,
+  ArrowDown,
+  CornerDownRight,
+  CornerUpRight,
+  RotateCcw
 } from 'lucide-vue-next';
 
-// New agent schema per image
-interface AgentFlow {
-  id: number;
-  name: string;
-  type: 'strategic' | 'operational' | 'diffusion';
-  inputs?: string[];
-  outputs?: string[];
-  nextAgents?: number[];
-}
+// Animation state
+const activeAgent = ref(0);
+const animationSpeed = 2000; // ms between agent activations
 
-const agentFlows: AgentFlow[] = [
-  {
-    id: 1,
-    name: 'Agent IA Etude marché',
-    type: 'strategic',
-    inputs: ['Formulation d\'objectif', 'Besoin', 'Budget', 'Cible'],
-    outputs: ['Pertinence du projet', 'SWOT'],
-    nextAgents: [2]
-  },
-  {
-    id: 2,
-    name: 'Agent IA Stratégie & SCP',
-    type: 'strategic',
-    inputs: ['SWOT Data'],
-    outputs: ['Persona', 'Schéma de vente', '4P/7P', 'Plan d\'action'],
-    nextAgents: [3]
-  },
-  {
-    id: 3,
-    name: 'Agent IA concepteur opérationnel et orchestrateur éditorial',
-    type: 'strategic',
-    inputs: ['Plan d\'action'],
-    outputs: ['Calendrier planning 90 days'],
-    nextAgents: [4, 5, 6, 7]
-  },
-  {
-    id: 4,
-    name: 'Agent IA Ads Manager',
-    type: 'operational',
-    inputs: ['Calendrier planning'],
-    outputs: ['Campagnes Live'],
-    nextAgents: [8]
-  },
-  {
-    id: 5,
-    name: 'Agent IA Création de contenu multimédia',
-    type: 'operational',
-    inputs: ['Calendrier planning'],
-    outputs: ['Contenu multimédia'],
-    nextAgents: [8]
-  },
-  {
-    id: 6,
-    name: 'Agent IA Email Marketing',
-    type: 'operational',
-    inputs: ['Calendrier planning'],
-    outputs: ['Emails & Séquences'],
-    nextAgents: [8]
-  },
-  {
-    id: 7,
-    name: 'Agent IA community manager',
-    type: 'operational',
-    inputs: ['Calendrier planning'],
-    outputs: ['Posts & Engagement'],
-    nextAgents: [8]
-  },
-  {
-    id: 8,
-    name: 'Agent IA Diffusion & Publishing',
-    type: 'diffusion',
-    inputs: ['Contenu des 4 agents'],
-    outputs: ['Contenu publié'],
-    nextAgents: [9]
-  },
-  {
-    id: 9,
-    name: 'Agent IA Performance & Décision',
-    type: 'strategic',
-    inputs: ['Données de publication'],
-    outputs: ['Performance', 'Décisions', 'Rectification'],
-    nextAgents: []
-  }
-];
+// Start animation demo
+const startDemo = () => {
+  activeAgent.value = 1;
+  const interval = setInterval(() => {
+    activeAgent.value++;
+    if (activeAgent.value > 9) {
+      clearInterval(interval);
+      setTimeout(() => {
+        activeAgent.value = 0;
+      }, 2000);
+    }
+  }, animationSpeed);
+};
 
 // Phase configuration
 const phases = ref([
   {
     id: 1,
-    name: 'Phase 1: Market Study',
-    shortName: 'Market Study',
+    name: 'Phase 1: Étude de Marché',
     agent: 'Agent IA Etude marché',
-    frequency: '2-5 years',
+    frequency: '2-5 ans',
     color: 'bg-fuchsia-100 text-fuchsia-700 border-fuchsia-200',
     iconColor: 'text-fuchsia-600',
     headerBg: 'bg-fuchsia-50/50',
-    status: 'completed' as const,
     description: 'Analyse macro, demande, offre, micro et SWOT synthétique',
     steps: [
-      { name: 'Analyse Macro', status: 'completed' },
-      { name: 'Analyse de la demande', status: 'completed' },
-      { name: 'Analyse de l\'offre', status: 'completed' },
-      { name: 'Analyse micro', status: 'completed' },
-      { name: 'SWOT synthétique', status: 'completed' }
+      { name: 'Analyse Macro', output: 'Tendances du marché' },
+      { name: 'Analyse de la demande', output: 'Besoins clients' },
+      { name: 'Analyse de l\'offre', output: 'Concurrents' },
+      { name: 'Analyse micro', output: 'Marché cible' },
+      { name: 'SWOT synthétique', output: 'Matrice SWOT' }
     ],
     outputs: ['Pertinence du projet', 'SWOT Analysis'],
-    decision: { type: 'GO / NO-GO', status: 'GO' }
+    decision: 'GO / NO-GO'
   },
   {
     id: 2,
-    name: 'Phase 2: Strategy & Planning',
-    shortName: 'Strategy & Planning',
-    agent: 'Agent IA Stratégie & SCP + Agent IA concepteur opérationnel',
-    frequency: '90 days',
+    name: 'Phase 2: Stratégie & Planification',
+    agent: 'Agent IA Stratégie & SCP',
+    frequency: '90 jours',
     color: 'bg-orange-100 text-orange-700 border-orange-200',
     iconColor: 'text-orange-600',
     headerBg: 'bg-orange-50/50',
-    status: 'active' as const,
     description: 'Segmentation, ciblage, positionnement, 4P/7P et plan d\'action',
     steps: [
-      { name: 'Segmentation', status: 'completed', approvalPoint: true, output: 'Persona' },
-      { name: 'Ciblage & Positionnement', status: 'completed', output: 'Schéma de vente' },
-      { name: '4P / 7P Marketing', status: 'completed' },
-      { name: 'Plan d\'action Marketing', status: 'active', approvalPoint: true },
-      { name: 'Calendrier Planning 90 days', status: 'active', output: 'Calendrier éditorial' }
+      { name: 'Segmentation', output: 'Persona' },
+      { name: 'Ciblage & Positionnement', output: 'Schéma de vente' },
+      { name: '4P / 7P Marketing', output: 'Mix marketing' },
+      { name: 'Plan d\'action Marketing', output: 'Stratégie' },
+      { name: 'Calendrier Planning 90 jours', output: 'Calendrier éditorial' }
     ],
-    outputs: ['Persona', 'Schéma de vente', '4P/7P', 'Plan d\'action', 'Calendrier 90 days']
+    outputs: ['Persona', 'Schéma de vente', '4P/7P', 'Plan d\'action', 'Calendrier 90j']
   },
   {
     id: 3,
-    name: 'Phase 3: Execution & Performance',
-    shortName: 'Daily Execution',
+    name: 'Phase 3: Exécution & Performance',
     agent: 'Multi-Agent Orchestration',
-    frequency: 'Daily',
+    frequency: 'Quotidien',
     color: 'bg-emerald-100 text-emerald-700 border-emerald-200',
     iconColor: 'text-emerald-600',
     headerBg: 'bg-emerald-50/50',
-    status: 'pending' as const,
     description: '4 agents opérationnels → Diffusion → Performance & Décision',
     subAgents: [
-      { name: 'Agent IA Ads Manager', status: 'pending', color: 'bg-blue-100 text-blue-700' },
-      { name: 'Agent IA Création contenu multimédia', status: 'pending', color: 'bg-blue-100 text-blue-700' },
-      { name: 'Agent IA Email Marketing', status: 'pending', color: 'bg-blue-100 text-blue-700' },
-      { name: 'Agent IA community manager', status: 'pending', color: 'bg-blue-100 text-blue-700' },
-      { name: 'Agent IA Diffusion & Publishing', status: 'pending', color: 'bg-emerald-100 text-emerald-700' },
-      { name: 'Agent IA Performance & Décision', status: 'pending', color: 'bg-fuchsia-100 text-fuchsia-700' }
+      { name: 'Agent IA Ads Manager', color: 'bg-blue-100 text-blue-700' },
+      { name: 'Agent IA Création contenu multimédia', color: 'bg-blue-100 text-blue-700' },
+      { name: 'Agent IA Email Marketing', color: 'bg-blue-100 text-blue-700' },
+      { name: 'Agent IA community manager', color: 'bg-blue-100 text-blue-700' },
+      { name: 'Agent IA Diffusion & Publishing', color: 'bg-emerald-100 text-emerald-700' },
+      { name: 'Agent IA Performance & Décision', color: 'bg-fuchsia-100 text-fuchsia-700' }
     ],
-    outputs: ['Contenu publié', 'Performance metrics', 'Auto-optimization']
+    outputs: ['Contenu publié', 'Métriques de performance', 'Auto-optimisation']
   }
 ]);
 
-const expandedPhases = ref<number[]>([2]);
-const selectedAgent = ref<AgentFlow | null>(null);
+const expandedPhases = ref<number[]>([1, 2, 3]);
 
 const togglePhase = (phaseId: number) => {
   const index = expandedPhases.value.indexOf(phaseId);
@@ -177,37 +104,6 @@ const togglePhase = (phaseId: number) => {
     expandedPhases.value.push(phaseId);
   }
 };
-
-const selectAgent = (agent: AgentFlow) => {
-  selectedAgent.value = selectedAgent.value?.id === agent.id ? null : agent;
-};
-
-const getCategoryColor = (type: string) => {
-  switch (type) {
-    case 'strategic': return 'bg-fuchsia-100 text-fuchsia-700 border-fuchsia-200';
-    case 'operational': return 'bg-blue-100 text-blue-700 border-blue-200';
-    case 'diffusion': return 'bg-emerald-100 text-emerald-700 border-emerald-200';
-    default: return 'bg-gray-100 text-gray-700 border-gray-200';
-  }
-};
-
-const getCategoryBadge = (type: string) => {
-  switch (type) {
-    case 'strategic': return 'Stratégique';
-    case 'operational': return 'Opérationnel';
-    case 'diffusion': return 'Diffusion';
-    default: return type;
-  }
-};
-
-const pendingApprovals = computed(() => {
-  return phases.value.reduce((count, phase) => {
-    if (phase.steps) {
-      return count + phase.steps.filter(s => s.status === 'active' && s.approvalPoint).length;
-    }
-    return count;
-  }, 0);
-});
 </script>
 
 <template>
@@ -215,163 +111,275 @@ const pendingApprovals = computed(() => {
     <!-- Header -->
     <div class="flex items-center justify-between">
       <div>
-        <h2 class="text-xl font-semibold text-slate-900">Global AI Workflow</h2>
-        <p class="text-sm text-slate-500">3-phase execution with real-time orchestration</p>
+        <h2 class="text-xl font-semibold text-slate-900">Workflow IA Global</h2>
+        <p class="text-sm text-slate-500">Orchestration en 3 phases avec points de validation</p>
       </div>
-      <div class="flex items-center gap-3">
-        <Button variant="outline" size="sm" class="gap-2">
-          <RefreshCw class="w-4 h-4" />
-          Refresh Status
-        </Button>
-        <Badge v-if="pendingApprovals > 0" variant="destructive" class="gap-1">
-          <AlertCircle class="w-3 h-3" />
-          {{ pendingApprovals }} Pending Approvals
-        </Badge>
-      </div>
+      <button 
+        @click="startDemo"
+        class="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition-colors flex items-center gap-2"
+      >
+        <RotateCcw class="w-4 h-4" />
+        Démonstration du flux
+      </button>
     </div>
 
-    <!-- Agent Flow Diagram -->
-    <div class="rounded-xl border border-slate-200 bg-white shadow-sm">
-      <div class="p-6">
-        <div class="flex items-center gap-2 mb-2">
-          <TrendingUp class="w-5 h-5 text-emerald-600" />
-          <h3 class="text-base font-semibold">Agent Flow & Orchestration</h3>
-        </div>
-        <p class="text-sm text-slate-500 mb-6">
-          Input → Strategic Agents → Operational Agents → Diffusion → Performance
-        </p>
+    <!-- Clean Flow Diagram -->
+    <div class="rounded-xl border border-slate-200 bg-white shadow-sm p-8">
+      <div class="text-center mb-6">
+        <h3 class="text-lg font-semibold text-blue-700">Marketing Operating System</h3>
+      </div>
+
+      <!-- Flow Container -->
+      <div class="relative">
         
-        <!-- Flow Visualization -->
-        <div class="flex flex-col gap-4">
-          <!-- Row 1: Strategic Input -->
-          <div class="flex items-center gap-3 flex-wrap">
-            <div class="px-4 py-2 bg-slate-100 rounded-lg border border-slate-200 text-sm font-medium text-slate-700">
-              Input
+        <!-- Row 1: Input → Strategic Chain -->
+        <div class="flex items-center justify-center gap-4 mb-8">
+          <!-- Input Box -->
+          <div 
+            class="w-48 p-4 rounded-lg border-2 border-slate-300 bg-white text-center transition-all duration-500"
+            :class="{ 'ring-4 ring-emerald-400 ring-opacity-50': activeAgent === 0 }"
+          >
+            <div class="text-xs font-semibold text-slate-700 mb-2">Input</div>
+            <div class="text-[10px] text-slate-500 leading-tight">
+              formulation d'objectif /<br>besoin / budget /<br>cible en tête
             </div>
-            <ArrowRight class="w-4 h-4 text-slate-400" />
-            <div 
-              v-for="agent in agentFlows.filter(a => a.id === 1)" 
-              :key="agent.id"
-              @click="selectAgent(agent)"
-              :class="[
-                'px-4 py-2 rounded-lg border text-sm font-medium cursor-pointer transition-all hover:shadow-md',
-                getCategoryColor(agent.type),
-                selectedAgent?.id === agent.id ? 'ring-2 ring-offset-2 ring-fuchsia-400' : ''
-              ]"
-            >
-              {{ agent.name }}
-            </div>
+            <div class="mt-2 text-[10px] text-slate-400">Cahier de charge</div>
           </div>
 
-          <!-- Row 2: Strategy Chain -->
-          <div class="flex items-center gap-3 flex-wrap pl-4 md:pl-16">
-            <ArrowRight class="w-4 h-4 text-slate-400" />
-            <div 
-              v-for="agent in agentFlows.filter(a => a.id === 2 || a.id === 3)" 
-              :key="agent.id"
-              @click="selectAgent(agent)"
-              :class="[
-                'px-4 py-2 rounded-lg border text-sm font-medium cursor-pointer transition-all hover:shadow-md',
-                getCategoryColor(agent.type),
-                selectedAgent?.id === agent.id ? 'ring-2 ring-offset-2 ring-fuchsia-400' : ''
-              ]"
-            >
-              {{ agent.name.replace('Agent IA ', '') }}
-            </div>
-          </div>
+          <!-- Arrow -->
+          <ArrowRight class="w-6 h-6 text-slate-400" />
 
-          <!-- Row 3: Operational Agents (4 parallel) -->
-          <div class="flex items-center gap-3 flex-wrap pl-4 md:pl-32">
-            <ArrowRight class="w-4 h-4 text-slate-400" />
-            <div class="flex flex-wrap gap-2">
-              <div 
-                v-for="agent in agentFlows.filter(a => a.id >= 4 && a.id <= 7)" 
-                :key="agent.id"
-                @click="selectAgent(agent)"
-                :class="[
-                  'px-3 py-2 rounded-lg border text-xs font-medium cursor-pointer transition-all hover:shadow-md text-center max-w-[140px]',
-                  getCategoryColor(agent.type),
-                  selectedAgent?.id === agent.id ? 'ring-2 ring-offset-2 ring-blue-400' : ''
-                ]"
-              >
-                {{ agent.name.replace('Agent IA ', '').replace('Création de ', '').replace('community', 'Community') }}
+          <!-- Agent 1: Etude Marché -->
+          <div 
+            class="w-40 p-3 rounded-lg border-2 border-fuchsia-400 bg-fuchsia-50 text-center transition-all duration-500"
+            :class="{ 
+              'ring-4 ring-fuchsia-400 ring-opacity-50 scale-105': activeAgent === 1,
+              'opacity-50': activeAgent > 0 && activeAgent !== 1
+            }"
+          >
+            <div class="text-[10px] font-medium text-slate-700 mb-1">Agent IA Etude marché</div>
+            <div class="flex justify-center">
+              <div class="w-10 h-10 rounded-lg bg-fuchsia-200 flex items-center justify-center">
+                <Bot class="w-6 h-6 text-fuchsia-700" />
               </div>
             </div>
           </div>
 
-          <!-- Row 4: Diffusion & Performance -->
-          <div class="flex items-center gap-3 flex-wrap pl-4 md:pl-32">
-            <ArrowRight class="w-4 h-4 text-slate-400" />
-            <div 
-              v-for="agent in agentFlows.filter(a => a.id === 8)" 
-              :key="agent.id"
-              @click="selectAgent(agent)"
-              :class="[
-                'px-4 py-2 rounded-lg border text-sm font-medium cursor-pointer transition-all hover:shadow-md',
-                getCategoryColor(agent.type),
-                selectedAgent?.id === agent.id ? 'ring-2 ring-offset-2 ring-green-400' : ''
-              ]"
-            >
-              {{ agent.name.replace('Agent IA ', '') }}
+          <!-- Arrow -->
+          <ArrowRight class="w-6 h-6 text-slate-400" />
+
+          <!-- Agent 2: Stratégie -->
+          <div 
+            class="w-40 p-3 rounded-lg border-2 border-fuchsia-400 bg-fuchsia-50 text-center transition-all duration-500"
+            :class="{ 
+              'ring-4 ring-fuchsia-400 ring-opacity-50 scale-105': activeAgent === 2,
+              'opacity-50': activeAgent > 0 && activeAgent !== 2
+            }"
+          >
+            <div class="text-[10px] font-medium text-slate-700 mb-1">Agent IA Stratégie & SCP</div>
+            <div class="flex justify-center">
+              <div class="w-10 h-10 rounded-lg bg-fuchsia-200 flex items-center justify-center">
+                <Bot class="w-6 h-6 text-fuchsia-700" />
+              </div>
             </div>
-            <ArrowRight class="w-4 h-4 text-slate-400" />
-            <div 
-              v-for="agent in agentFlows.filter(a => a.id === 9)" 
-              :key="agent.id"
-              @click="selectAgent(agent)"
-              :class="[
-                'px-4 py-2 rounded-lg border text-sm font-medium cursor-pointer transition-all hover:shadow-md',
-                getCategoryColor(agent.type),
-                selectedAgent?.id === agent.id ? 'ring-2 ring-offset-2 ring-fuchsia-400' : ''
-              ]"
-            >
-              {{ agent.name.replace('Agent IA ', '') }}
+          </div>
+
+          <!-- Arrow -->
+          <ArrowRight class="w-6 h-6 text-slate-400" />
+
+          <!-- Agent 3: Concepteur -->
+          <div 
+            class="w-44 p-3 rounded-lg border-2 border-fuchsia-400 bg-fuchsia-50 text-center transition-all duration-500"
+            :class="{ 
+              'ring-4 ring-fuchsia-400 ring-opacity-50 scale-105': activeAgent === 3,
+              'opacity-50': activeAgent > 0 && activeAgent !== 3
+            }"
+          >
+            <div class="text-[10px] font-medium text-slate-700 mb-1">Agent IA concepteur opérationnel et orchestrateur éditorial</div>
+            <div class="flex justify-center">
+              <div class="w-10 h-10 rounded-lg bg-fuchsia-200 flex items-center justify-center">
+                <Bot class="w-6 h-6 text-fuchsia-700" />
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Selected Agent Details -->
-        <div v-if="selectedAgent" class="mt-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
-          <div class="flex items-start justify-between mb-3">
-            <div>
-              <h4 class="font-semibold text-slate-900">{{ selectedAgent.name }}</h4>
-              <Badge :class="getCategoryColor(selectedAgent.type)" class="mt-1 text-xs">
-                {{ getCategoryBadge(selectedAgent.type) }}
-              </Badge>
-            </div>
-            <Button variant="ghost" size="sm" @click="selectedAgent = null">×</Button>
+        <!-- Split to 4 Operational Agents -->
+        <div class="flex justify-center mb-4">
+          <div class="relative">
+            <ArrowDown class="w-6 h-6 text-slate-400" />
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-            <div>
-              <span class="text-slate-500">Inputs:</span>
-              <div class="flex flex-wrap gap-1 mt-1">
-                <span v-for="input in selectedAgent.inputs" :key="input" class="px-2 py-0.5 bg-white rounded text-slate-700 border border-slate-200 text-xs">
-                  {{ input }}
-                </span>
+        </div>
+
+        <!-- Row 2: 4 Parallel Operational Agents -->
+        <div class="flex items-start justify-center gap-4 mb-8">
+          <!-- Vertical connectors from split -->
+          <div class="absolute left-1/2 -translate-x-1/2 top-0 flex gap-16">
+            <div class="w-px h-6 bg-slate-300"></div>
+          </div>
+
+          <!-- Agent 4: Ads Manager -->
+          <div 
+            class="w-36 p-3 rounded-lg border-2 border-blue-400 bg-blue-50 text-center transition-all duration-500"
+            :class="{ 
+              'ring-4 ring-blue-400 ring-opacity-50 scale-105': activeAgent === 4,
+              'opacity-50': activeAgent > 0 && activeAgent !== 4
+            }"
+          >
+            <div class="text-[10px] font-medium text-slate-700 mb-1">Agent IA Ads Manager</div>
+            <div class="flex justify-center">
+              <div class="w-10 h-10 rounded-lg bg-blue-200 flex items-center justify-center">
+                <Bot class="w-6 h-6 text-blue-700" />
               </div>
             </div>
-            <div>
-              <span class="text-slate-500">Outputs:</span>
-              <div class="flex flex-wrap gap-1 mt-1">
-                <span v-for="output in selectedAgent.outputs" :key="output" class="px-2 py-0.5 bg-white rounded text-slate-700 border border-slate-200 text-xs">
-                  {{ output }}
-                </span>
+          </div>
+
+          <!-- Agent 5: Création contenu -->
+          <div 
+            class="w-36 p-3 rounded-lg border-2 border-blue-400 bg-blue-50 text-center transition-all duration-500"
+            :class="{ 
+              'ring-4 ring-blue-400 ring-opacity-50 scale-105': activeAgent === 5,
+              'opacity-50': activeAgent > 0 && activeAgent !== 5
+            }"
+          >
+            <div class="text-[10px] font-medium text-slate-700 mb-1">Agent IA Création de contenu multimédia</div>
+            <div class="flex justify-center">
+              <div class="w-10 h-10 rounded-lg bg-blue-200 flex items-center justify-center">
+                <Bot class="w-6 h-6 text-blue-700" />
               </div>
             </div>
           </div>
+
+          <!-- Agent 6: Email Marketing -->
+          <div 
+            class="w-36 p-3 rounded-lg border-2 border-blue-400 bg-blue-50 text-center transition-all duration-500"
+            :class="{ 
+              'ring-4 ring-blue-400 ring-opacity-50 scale-105': activeAgent === 6,
+              'opacity-50': activeAgent > 0 && activeAgent !== 6
+            }"
+          >
+            <div class="text-[10px] font-medium text-slate-700 mb-1">Agent IA Email Marketing</div>
+            <div class="flex justify-center">
+              <div class="w-10 h-10 rounded-lg bg-blue-200 flex items-center justify-center">
+                <Bot class="w-6 h-6 text-blue-700" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Agent 7: Community Manager -->
+          <div 
+            class="w-36 p-3 rounded-lg border-2 border-blue-400 bg-blue-50 text-center transition-all duration-500"
+            :class="{ 
+              'ring-4 ring-blue-400 ring-opacity-50 scale-105': activeAgent === 7,
+              'opacity-50': activeAgent > 0 && activeAgent !== 7
+            }"
+          >
+            <div class="text-[10px] font-medium text-slate-700 mb-1">Agent IA community manager</div>
+            <div class="flex justify-center">
+              <div class="w-10 h-10 rounded-lg bg-blue-200 flex items-center justify-center">
+                <Bot class="w-6 h-6 text-blue-700" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Converge to Diffusion -->
+        <div class="flex justify-center mb-4">
+          <div class="grid grid-cols-4 gap-16 w-full max-w-3xl">
+            <div class="flex justify-center"><ArrowDown class="w-6 h-6 text-slate-400" /></div>
+            <div class="flex justify-center"><ArrowDown class="w-6 h-6 text-slate-400" /></div>
+            <div class="flex justify-center"><ArrowDown class="w-6 h-6 text-slate-400" /></div>
+            <div class="flex justify-center"><ArrowDown class="w-6 h-6 text-slate-400" /></div>
+          </div>
+        </div>
+
+        <!-- Row 3: Diffusion & Performance -->
+        <div class="flex items-center justify-center gap-8">
+          <!-- Agent 8: Diffusion -->
+          <div 
+            class="w-44 p-4 rounded-lg border-2 border-emerald-400 bg-emerald-50 text-center transition-all duration-500"
+            :class="{ 
+              'ring-4 ring-emerald-400 ring-opacity-50 scale-105': activeAgent === 8,
+              'opacity-50': activeAgent > 0 && activeAgent !== 8
+            }"
+          >
+            <div class="text-xs font-medium text-slate-700 mb-2">Agent IA Diffusion & Publishing</div>
+            <div class="flex justify-center">
+              <div class="w-12 h-12 rounded-lg bg-emerald-200 flex items-center justify-center">
+                <Bot class="w-7 h-7 text-emerald-700" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Arrow -->
+          <ArrowRight class="w-8 h-8 text-slate-400" />
+
+          <!-- Agent 9: Performance -->
+          <div 
+            class="w-44 p-4 rounded-lg border-2 border-fuchsia-400 bg-fuchsia-50 text-center transition-all duration-500"
+            :class="{ 
+              'ring-4 ring-fuchsia-400 ring-opacity-50 scale-105': activeAgent === 9,
+              'opacity-50': activeAgent > 0 && activeAgent !== 9 && activeAgent !== 0
+            }"
+          >
+            <div class="text-xs font-medium text-slate-700 mb-2">Agent IA Performance & Décision</div>
+            <div class="flex justify-center">
+              <div class="w-12 h-12 rounded-lg bg-fuchsia-200 flex items-center justify-center">
+                <Bot class="w-7 h-7 text-fuchsia-700" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feedback Loop Arrow -->
+        <div class="absolute right-4 top-1/2 -translate-y-1/2">
+          <svg width="100" height="200" class="text-slate-300">
+            <path 
+              d="M 80 100 Q 50 0, 10 50" 
+              fill="none" 
+              stroke="currentColor" 
+              stroke-width="2"
+              stroke-dasharray="5,5"
+              class="transition-all duration-1000"
+              :class="{ 'text-emerald-500': activeAgent === 9 }"
+            />
+            <polygon 
+              points="10,50 15,45 15,55" 
+              fill="currentColor"
+              class="transition-all duration-1000"
+              :class="{ 'text-emerald-500': activeAgent === 9 }"
+            />
+          </svg>
+        </div>
+        <div class="absolute right-0 top-1/4 text-[10px] text-slate-400 -rotate-12">
+          Rectification auto
+        </div>
+
+      </div>
+
+      <!-- Legend -->
+      <div class="mt-8 flex items-center justify-center gap-6 text-xs">
+        <div class="flex items-center gap-2">
+          <div class="w-4 h-4 rounded bg-fuchsia-200 border border-fuchsia-400"></div>
+          <span class="text-slate-600">Stratégique (2-5 ans / 90 jours)</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="w-4 h-4 rounded bg-blue-200 border border-blue-400"></div>
+          <span class="text-slate-600">Opérationnel (Quotidien)</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="w-4 h-4 rounded bg-emerald-200 border border-emerald-400"></div>
+          <span class="text-slate-600">Diffusion (Quotidien)</span>
         </div>
       </div>
     </div>
 
-    <!-- Phases -->
+    <!-- Phases Detail -->
     <div class="grid gap-4">
       <div 
         v-for="phase in phases" 
         :key="phase.id"
-        :class="[
-          'rounded-xl border border-slate-200 bg-white shadow-sm transition-all',
-          phase.status === 'active' ? 'ring-1 ring-emerald-300 ring-offset-1' : ''
-        ]"
+        class="rounded-xl border border-slate-200 bg-white shadow-sm"
       >
         <div 
           class="cursor-pointer p-4"
@@ -410,50 +418,24 @@ const pendingApprovals = computed(() => {
             <div 
               v-for="(step, index) in phase.steps" 
               :key="index"
-              class="flex items-center justify-between p-3 rounded-lg border"
-              :class="step.status === 'completed' ? 'bg-slate-50 border-slate-200' : 
-                      step.status === 'active' ? 'bg-emerald-50/50 border-emerald-200' : 
-                      'bg-white border-slate-200'"
+              class="flex items-center justify-between p-3 rounded-lg border bg-slate-50 border-slate-200"
             >
               <div class="flex items-center gap-3">
-                <div 
-                  class="w-6 h-6 rounded-full flex items-center justify-center text-xs"
-                  :class="step.status === 'completed' ? 'bg-emerald-500 text-white' : 
-                          step.status === 'active' ? 'bg-emerald-500 text-white animate-pulse' : 
-                          'bg-slate-200 text-slate-500'"
-                >
-                  <CheckCircle2 v-if="step.status === 'completed'" class="w-4 h-4" />
-                  <Clock v-else-if="step.status === 'active'" class="w-4 h-4" />
-                  <span v-else>{{ index + 1 }}</span>
+                <div class="w-6 h-6 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-medium">
+                  {{ index + 1 }}
                 </div>
-                <span 
-                  class="text-sm font-medium"
-                  :class="step.status === 'completed' ? 'text-slate-700 line-through' : 
-                          step.status === 'active' ? 'text-emerald-700' : 
-                          'text-slate-600'"
-                >
+                <span class="text-sm font-medium text-slate-700">
                   {{ step.name }}
                 </span>
-                <Badge v-if="step.approvalPoint" variant="secondary" class="text-xs">
-                  <AlertCircle class="w-3 h-3 mr-1" />
-                  Approval Required
-                </Badge>
-                <Badge v-if="step.output" variant="outline" class="text-xs">
+                <Badge v-if="phase.id === 1 && index === 4" variant="secondary" class="text-xs">
                   <Target class="w-3 h-3 mr-1" />
-                  {{ step.output }}
+                  {{ phase.decision }}
                 </Badge>
               </div>
-              <div class="flex items-center gap-2">
-                <Button 
-                  v-if="step.status === 'active' && step.approvalPoint"
-                  size="sm" 
-                  variant="default"
-                  class="h-8 gap-1 bg-emerald-600 hover:bg-emerald-700"
-                >
-                  <CheckCircle2 class="w-3 h-3" />
-                  Approve
-                </Button>
-              </div>
+              <Badge variant="outline" class="text-xs">
+                <CheckCircle2 class="w-3 h-3 mr-1" />
+                {{ step.output }}
+              </Badge>
             </div>
           </div>
 
@@ -468,7 +450,6 @@ const pendingApprovals = computed(() => {
               >
                 <Bot class="w-4 h-4" />
                 <span class="text-sm font-medium">{{ subAgent.name.replace('Agent IA ', '') }}</span>
-                <span class="text-xs opacity-70">{{ subAgent.status }}</span>
               </div>
             </div>
             <div class="flex items-center gap-2 p-3 bg-fuchsia-50 rounded-lg border border-fuchsia-200">

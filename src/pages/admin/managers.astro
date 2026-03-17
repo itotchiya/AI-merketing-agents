@@ -1,0 +1,102 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Sidebar from '@/components/layout/Sidebar.vue';
+import Header from '@/components/layout/Header.vue';
+
+const breadcrumbs = [
+  { label: 'Admin', href: '/' },
+  { label: 'Gestion Managers', href: '/admin/managers' }
+];
+
+const managers = [
+  { id: 1, name: 'Marie Dubois', email: 'marie@mos.ai', projects: 4, status: 'active', joined: '15 Jan 2024' },
+  { id: 2, name: 'Sophie Bernard', email: 'sophie@mos.ai', projects: 3, status: 'active', joined: '22 Fév 2024' },
+  { id: 3, name: 'Lucas Martin', email: 'lucas@mos.ai', projects: 0, status: 'pending', joined: '10 Mar 2024' },
+];
+---
+
+<Layout title="Gestion Managers | Admin">
+  <div class="flex min-h-screen">
+    <Sidebar role="admin" activePath="/admin/managers" client:load />
+    
+    <div class="ml-60 flex-1">
+      <Header 
+        title="Gestion des Managers" 
+        subtitle="Ajoutez et gérez les managers de l'organisation"
+        currentRole="admin"
+        breadcrumbs={breadcrumbs}
+        client:load
+      />
+      
+      <main class="p-6">
+        <!-- Actions -->
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center gap-2">
+            <input 
+              type="search" 
+              placeholder="Rechercher un manager..."
+              class="h-10 w-72 rounded-lg border border-slate-200 bg-white px-4 text-sm"
+            />
+          </div>
+          <button class="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium flex items-center gap-2 hover:bg-emerald-700 transition-colors">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Ajouter un Manager
+          </button>
+        </div>
+
+        <!-- Managers List -->
+        <div class="rounded-xl border border-slate-200 bg-white overflow-hidden">
+          <table class="w-full">
+            <thead class="bg-slate-50 border-b border-slate-100">
+              <tr>
+                <th class="px-6 py-4 text-left text-sm font-medium text-slate-500">Manager</th>
+                <th class="px-6 py-4 text-left text-sm font-medium text-slate-500">Projets</th>
+                <th class="px-6 py-4 text-left text-sm font-medium text-slate-500">Statut</th>
+                <th class="px-6 py-4 text-left text-sm font-medium text-slate-500">Date d'ajout</th>
+                <th class="px-6 py-4 text-left text-sm font-medium text-slate-500">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              {managers.map((manager) => (
+                <tr class="hover:bg-slate-50 transition-colors">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <div class="h-10 w-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-medium">
+                        {manager.name.charAt(0)}
+                      </div>
+                      <div>
+                        <p class="font-medium text-slate-900">{manager.name}</p>
+                        <p class="text-sm text-slate-500">{manager.email}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span class="text-sm text-slate-700">{manager.projects} projets</span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span class={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
+                      manager.status === 'active' 
+                        ? 'bg-emerald-100 text-emerald-700' 
+                        : 'bg-amber-100 text-amber-700'
+                    }`}>
+                      {manager.status === 'active' ? 'Actif' : 'En attente'}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-slate-500">{manager.joined}</td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                      <button class="text-sm text-emerald-600 hover:text-emerald-700 font-medium">Modifier</button>
+                      <button class="text-sm text-red-600 hover:text-red-700 font-medium">Supprimer</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+</Layout>

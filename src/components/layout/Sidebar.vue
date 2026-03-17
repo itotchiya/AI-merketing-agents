@@ -71,7 +71,10 @@ import {
   ClipboardList,
   Briefcase,
   LineChart,
-  TrendingUp
+  TrendingUp,
+  Plus,
+  UserPlus,
+  Eye
 } from 'lucide-vue-next';
 
 interface NavItem {
@@ -96,13 +99,50 @@ const currentPath = typeof window !== 'undefined'
   ? window.location.pathname 
   : '/';
 
+// Get all navigation items for this role
+const allNavItems = computed(() => {
+  const nav = navigation.value;
+  return nav.flatMap(section => section.items);
+});
+
 const isActive = (href: string) => {
-  // Handle root path
-  if (href === '/' && currentPath === '/') return true;
-  // Handle other paths
-  if (href !== '/' && currentPath.startsWith(href)) return true;
-  // Handle activePath prop if provided
-  if (props.activePath && href.includes(props.activePath)) return true;
+  // Use provided activePath prop if available, otherwise use currentPath
+  const path = props.activePath || currentPath;
+  
+  // Remove trailing slashes for comparison
+  const cleanPath = path.replace(/\/$/, '') || '/';
+  const cleanHref = href.replace(/\/$/, '') || '/';
+  
+  // Exact match
+  if (cleanPath === cleanHref) return true;
+  
+  // For root/dashboard paths, only match exact
+  if (cleanHref === '/' || cleanHref === '/manager' || cleanHref === '/executif' || cleanHref === '/superadmin') {
+    return cleanPath === cleanHref;
+  }
+  
+  // Check if this href is the most specific match
+  // Get all nav items hrefs
+  const allHrefs = allNavItems.value.map(item => item.href.replace(/\/$/, '') || '/');
+  
+  // Filter hrefs that match the current path (path starts with href)
+  const matchingHrefs = allHrefs.filter(h => {
+    if (h === '/') return false;
+    return cleanPath.startsWith(h + '/') || cleanPath === h;
+  });
+  
+  // If there are matching hrefs, only the longest one should be active
+  if (matchingHrefs.length > 0) {
+    // Sort by length descending to get most specific
+    const mostSpecific = matchingHrefs.sort((a, b) => b.length - a.length)[0];
+    return cleanHref === mostSpecific;
+  }
+  
+  // Handle query params (e.g., /manager?view=tasks)
+  if (cleanHref.includes('?')) {
+    return cleanPath.startsWith(cleanHref.split('?')[0]);
+  }
+  
   return false;
 };
 
@@ -125,29 +165,28 @@ const userRoleLabel = computed(() => {
   }
 });
 
-// Admin Navigation
+// ==================== ADMIN (Monitor Only) ====================
 const adminNav: NavSection[] = [
   {
     title: 'Principal',
     items: [
       { label: 'Tableau de bord', href: '/', icon: LayoutDashboard },
+      { label: 'Monitoring Projets', href: '/projects', icon: Eye },
       { label: 'Workflow IA', href: '/ai-workflow', icon: TrendingUp },
-      { label: 'Projets', href: '/projects', icon: FolderKanban },
       { label: 'Hub Agents', href: '/agents', icon: Bot },
-      { label: 'Validation', href: '/validation', icon: CheckCircle, badge: 3 },
-      { label: 'Rapports', href: '/reports', icon: BarChart3 },
     ]
   },
   {
-    title: 'Équipe',
+    title: 'Gestion',
     items: [
-      { label: 'Membres', href: '/team', icon: Users },
+      { label: 'Managers', href: '/admin/managers', icon: UserPlus },
+      { label: 'Équipe', href: '/team', icon: Users },
       { label: 'Paramètres', href: '/settings', icon: Settings },
     ]
   }
 ];
 
-// SuperAdmin Navigation
+// ==================== SUPERADMIN ====================
 const superAdminNav: NavSection[] = [
   {
     title: 'Plateforme',
@@ -161,49 +200,61 @@ const superAdminNav: NavSection[] = [
     title: 'Gestion',
     items: [
       { label: 'Utilisateurs', href: '/users', icon: Users },
-      { label: 'Journaux d\'audit', href: '/audit', icon: Shield },
-      { label: 'Paramètres', href: '/settings', icon: Settings },
+      { label: "Journaux d'audit", href: '/audit', icon: Shield },
+      { label: 'Paramètres', href: '/superadmin/settings', icon: Settings },
     ]
   }
 ];
 
-// Manager Navigation - Role-specific URLs
+// ==================== MANAGER (Full Control) ====================
 const managerNav: NavSection[] = [
   {
     title: 'Opérations',
     items: [
       { label: 'Tableau de bord', href: '/manager', icon: LayoutDashboard },
-      { label: 'Mes Tâches', href: '/manager?view=tasks', icon: ClipboardList },
+      { label: 'Nouveau Projet', href: '/manager/project-input', icon: Plus },
+      { label: 'Mes Projets', href: '/manager/projects', icon: FolderKanban },
+      { label: 'Validation', href: '/manager/validation', icon: CheckCircle, badge: 3 },
+    ]
+  },
+  {
+    title: 'Agents & Équipe',
+    items: [
       { label: 'Hub Agents', href: '/manager/agents', icon: Bot },
-      { label: 'Validation', href: '/manager/validation', icon: CheckCircle, badge: 2 },
+      { label: 'Exécutifs', href: '/manager/executifs', icon: UserPlus },
+      { label: 'Mon Équipe', href: '/manager/team', icon: Users },
     ]
   },
   {
     title: 'Analyses',
     items: [
-      { label: 'Mes Projets', href: '/manager/projects', icon: FolderKanban },
       { label: 'Rapports', href: '/manager/reports', icon: BarChart3 },
-      { label: 'Mon Équipe', href: '/manager/team', icon: Users },
       { label: 'Paramètres', href: '/manager/settings', icon: Settings },
     ]
   }
 ];
 
-// Exécutif Navigation - Role-specific URLs
+// ==================== EXECUTIF (Daily Only) ====================
 const executifNav: NavSection[] = [
   {
     title: 'Travail',
     items: [
-      { label: 'Mes Tâches', href: '/executif', icon: ClipboardList },
-      { label: 'Tâche en cours', href: '/executif/tasks', icon: Briefcase },
-      { label: 'Mes Agents', href: '/executif/agents', icon: Bot },
+      { label: 'Tableau de bord', href: '/executif', icon: LayoutDashboard },
+      { label: 'Tâches Quotidiennes', href: '/executif/tasks', icon: ClipboardList },
+      { label: 'Validation Quotidienne', href: '/executif/validation', icon: CheckCircle, badge: 2 },
+    ]
+  },
+  {
+    title: 'Agents',
+    items: [
+      { label: 'Mes Agents (Daily)', href: '/executif/agents', icon: Bot },
     ]
   },
   {
     title: 'Performance',
     items: [
-      { label: 'Mes Stats', href: '/executif?tab=performance', icon: LineChart },
-      { label: 'Mon Équipe', href: '/executif/team', icon: Users },
+      { label: 'Mes Stats', href: '/executif/stats', icon: LineChart },
+      { label: 'Équipe', href: '/executif/team', icon: Users },
       { label: 'Paramètres', href: '/executif/settings', icon: Settings },
     ]
   }

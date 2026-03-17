@@ -1,12 +1,10 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import Sidebar from '@/components/layout/Sidebar.vue';
+import Header from '@/components/layout/Header.vue';
 import { agents } from '@/data/mockData';
 import { 
   Bot, 
-  Search, 
-  Filter,
-  Play,
-  Settings,
   Clock,
   Zap,
   TrendingUp,
@@ -17,8 +15,7 @@ import {
   Megaphone,
   Image,
   Users,
-  BrainCircuit,
-  ArrowRight
+  BrainCircuit
 } from 'lucide-vue-next';
 
 // Get agent-specific icon
@@ -55,302 +52,266 @@ const operationalBg = 'bg-blue-50 text-blue-700 border-blue-200';
 const diffusionBg = 'bg-emerald-50 text-emerald-700 border-emerald-200';
 ---
 
-<Layout title="Agent Hub" breadcrumbs={breadcrumbs}>
-  <div class="space-y-6">
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-      <div>
-        <h1 class="text-2xl font-bold text-slate-900">Hub Agents</h1>
-        <p class="text-slate-500 mt-1">Découvrez et gérez tous les agents IA du Marketing Operating System</p>
-      </div>
-      <div class="flex items-center gap-3">
-        <button class="inline-flex items-center justify-center gap-2 h-9 px-4 py-2 rounded-md border border-slate-200 bg-white text-sm font-medium hover:bg-slate-50 transition-colors">
-          <Filter data-icon class="w-4 h-4" />
-          Filter
-        </button>
-        <button class="inline-flex items-center justify-center gap-2 h-9 px-4 py-2 rounded-md bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition-colors">
-          <Play data-icon class="w-4 h-4" />
-          Run All
-        </button>
-      </div>
-    </div>
-
-    <!-- Search -->
-    <div class="relative">
-      <Search data-icon class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-      <input 
-        type="text"
-        placeholder="Search agents by name, capability, or input/output type..." 
-        class="w-full h-10 pl-10 pr-4 rounded-md border border-slate-200 bg-white text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2"
+<Layout title="Hub Agents">
+  <div class="flex min-h-screen">
+    <Sidebar role="admin" activePath="/agent-hub" client:load />
+    
+    <div class="ml-60 flex-1">
+      <Header 
+        title="Hub Agents" 
+        subtitle="Catalogue des agents IA du Marketing Operating System"
+        currentRole="admin"
+        breadcrumbs={breadcrumbs}
+        client:load
       />
-    </div>
-
-    <!-- Agent Workflow Overview -->
-    <div class="rounded-xl border border-slate-200 bg-gradient-to-r from-fuchsia-50/50 via-orange-50/50 to-emerald-50/50 overflow-hidden">
-      <div class="p-6">
-        <div class="flex items-center gap-2 mb-2">
-          <TrendingUp data-icon class="w-5 h-5 text-emerald-600" />
-          <h2 class="text-lg font-semibold text-slate-900">Agent Workflow Overview</h2>
-        </div>
-        <p class="text-sm text-slate-500 mb-6">How the 9 AI agents work together in a 3-phase orchestration</p>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <!-- Phase 1 -->
-          <div class="p-4 bg-white rounded-lg border border-fuchsia-200">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-fuchsia-100 text-fuchsia-700 border border-fuchsia-200 mb-2">Phase 1</span>
-            <h3 class="font-semibold text-slate-900 mb-1">Étude de Marché</h3>
-            <p class="text-sm text-slate-500 mb-3">Cycle 2-5 ans</p>
-            <div class="space-y-2">
-              <div class="flex items-center gap-2 text-sm">
-                <div class="w-2 h-2 rounded-full bg-fuchsia-500"></div>
-                <span>Agent IA Etude marché</span>
-              </div>
+      
+      <main class="p-6">
+        <!-- Agent Workflow Overview -->
+        <div class="rounded-xl border border-slate-200 bg-gradient-to-r from-fuchsia-50/50 via-orange-50/50 to-emerald-50/50 overflow-hidden mb-8">
+          <div class="p-6">
+            <div class="flex items-center gap-2 mb-2">
+              <TrendingUp data-icon class="w-5 h-5 text-emerald-600" />
+              <h2 class="text-lg font-semibold text-slate-900">Vue d'ensemble du Workflow</h2>
             </div>
-            <div class="mt-3 p-2 bg-fuchsia-50 rounded text-xs text-fuchsia-700 border border-fuchsia-100">
-              Sortie : Analyse SWOT, Pertinence du projet
-            </div>
-          </div>
-
-          <!-- Phase 2 -->
-          <div class="p-4 bg-white rounded-lg border border-orange-200">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-700 border border-orange-200 mb-2">Phase 2</span>
-            <h3 class="font-semibold text-slate-900 mb-1">Stratégie & Planification</h3>
-            <p class="text-sm text-slate-500 mb-3">Cycle 90 jours</p>
-            <div class="space-y-2">
-              <div class="flex items-center gap-2 text-sm">
-                <div class="w-2 h-2 rounded-full bg-fuchsia-500"></div>
-                <span>Agent IA Stratégie & SCP</span>
-              </div>
-              <div class="flex items-center gap-2 text-sm">
-                <div class="w-2 h-2 rounded-full bg-fuchsia-500"></div>
-                <span class="text-xs">Concepteur opérationnel/orchestrateur</span>
-              </div>
-            </div>
-            <div class="mt-3 p-2 bg-orange-50 rounded text-xs text-orange-700 border border-orange-100">
-              Sortie : Persona, 4P/7P, Calendrier 90j
-            </div>
-          </div>
-
-          <!-- Phase 3 -->
-          <div class="p-4 bg-white rounded-lg border border-emerald-200">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700 border border-emerald-200 mb-2">Phase 3</span>
-            <h3 class="font-semibold text-slate-900 mb-1">Exécution Quotidienne</h3>
-            <p class="text-sm text-slate-500 mb-3">Temps réel quotidien</p>
-            <div class="space-y-2">
-              <div class="flex items-center gap-2 text-xs">
-                <div class="w-2 h-2 rounded-full bg-blue-500"></div>
-                <span>Ads, Contenu, Email, Community</span>
-              </div>
-              <div class="flex items-center gap-2 text-xs">
-                <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
-                <span>Diffusion & Publishing</span>
-              </div>
-              <div class="flex items-center gap-2 text-xs">
-                <div class="w-2 h-2 rounded-full bg-fuchsia-500"></div>
-                <span>Performance & Décision</span>
-              </div>
-            </div>
-            <div class="mt-3 p-2 bg-emerald-50 rounded text-xs text-emerald-700 border border-emerald-100">
-              Sortie : Contenu en direct, Performance, Auto-optimisation
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Agent Categories -->
-    <div class="space-y-8">
-      <!-- Strategic Agents -->
-      <section>
-        <div class="flex items-center gap-3 mb-4">
-          <div class="p-2 bg-fuchsia-100 rounded-lg">
-            <BrainCircuit data-icon class="w-5 h-5 text-fuchsia-600" />
-          </div>
-          <div>
-            <h2 class="text-lg font-semibold text-slate-900">Agents Stratégiques</h2>
-            <p class="text-sm text-slate-500">{agentsByCategory.strategic.length} agents pour l'analyse, la stratégie et la performance</p>
-          </div>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {agentsByCategory.strategic.map((agent) => {
-            const Icon = getAgentIcon(agent.name);
-            return (
-              <div class="group rounded-xl border border-slate-200 bg-white p-6 hover:shadow-lg transition-shadow">
-                <div class="flex items-start justify-between mb-4">
-                  <div class="flex items-center gap-3">
-                    <div class={`p-2 rounded-lg ${strategicColor}`}>
-                      <Icon data-icon class="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h3 class="font-semibold text-slate-900">{agent.name.replace('Agent IA ', '')}</h3>
-                      <span class={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium mt-1 ${strategicBg}`}>
-                        Stratégique
-                      </span>
-                    </div>
+            <p class="text-sm text-slate-500 mb-6">Les 9 agents IA travaillent ensemble dans une orchestration en 3 phases</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <!-- Phase 1 -->
+              <div class="p-4 bg-white rounded-lg border border-fuchsia-200">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-fuchsia-100 text-fuchsia-700 border border-fuchsia-200 mb-2">Phase 1</span>
+                <h3 class="font-semibold text-slate-900 mb-1">Étude de Marché</h3>
+                <p class="text-sm text-slate-500 mb-3">Cycle 2-5 ans</p>
+                <div class="space-y-2">
+                  <div class="flex items-center gap-2 text-sm">
+                    <div class="w-2 h-2 rounded-full bg-fuchsia-500"></div>
+                    <span>Agent IA Etude marché</span>
                   </div>
                 </div>
-                
-                <p class="text-sm text-slate-600 mb-4">{agent.description}</p>
-                
-                <div class="space-y-3">
-                  <div>
-                    <div class="text-xs text-slate-500 mb-1">Entrées</div>
-                    <div class="flex flex-wrap gap-1">
-                      {agent.inputs.slice(0, 3).map((input) => (
-                        <span class="px-2 py-1 bg-slate-100 rounded text-xs text-slate-700">{input}</span>
-                      ))}
+                <div class="mt-3 p-2 bg-fuchsia-50 rounded text-xs text-fuchsia-700 border border-fuchsia-100">
+                  Sortie : Analyse SWOT, Pertinence du projet
+                </div>
+              </div>
+
+              <!-- Phase 2 -->
+              <div class="p-4 bg-white rounded-lg border border-orange-200">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-700 border border-orange-200 mb-2">Phase 2</span>
+                <h3 class="font-semibold text-slate-900 mb-1">Stratégie & Planification</h3>
+                <p class="text-sm text-slate-500 mb-3">Cycle 90 jours</p>
+                <div class="space-y-2">
+                  <div class="flex items-center gap-2 text-sm">
+                    <div class="w-2 h-2 rounded-full bg-fuchsia-500"></div>
+                    <span>Agent IA Stratégie & SCP</span>
+                  </div>
+                  <div class="flex items-center gap-2 text-sm">
+                    <div class="w-2 h-2 rounded-full bg-fuchsia-500"></div>
+                    <span class="text-xs">Concepteur opérationnel/orchestrateur</span>
+                  </div>
+                </div>
+                <div class="mt-3 p-2 bg-orange-50 rounded text-xs text-orange-700 border border-orange-100">
+                  Sortie : Persona, 4P/7P, Calendrier 90j
+                </div>
+              </div>
+
+              <!-- Phase 3 -->
+              <div class="p-4 bg-white rounded-lg border border-emerald-200">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700 border border-emerald-200 mb-2">Phase 3</span>
+                <h3 class="font-semibold text-slate-900 mb-1">Exécution Quotidienne</h3>
+                <p class="text-sm text-slate-500 mb-3">Temps réel quotidien</p>
+                <div class="space-y-2">
+                  <div class="flex items-center gap-2 text-xs">
+                    <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                    <span>Ads, Contenu, Email, Community</span>
+                  </div>
+                  <div class="flex items-center gap-2 text-xs">
+                    <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+                    <span>Diffusion & Publishing</span>
+                  </div>
+                  <div class="flex items-center gap-2 text-xs">
+                    <div class="w-2 h-2 rounded-full bg-fuchsia-500"></div>
+                    <span>Performance & Décision</span>
+                  </div>
+                </div>
+                <div class="mt-3 p-2 bg-emerald-50 rounded text-xs text-emerald-700 border border-emerald-100">
+                  Sortie : Contenu en direct, Performance, Auto-optimisation
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Agent Categories -->
+        <div class="space-y-8">
+          <!-- Strategic Agents -->
+          <section>
+            <div class="flex items-center gap-3 mb-4">
+              <div class="p-2 bg-fuchsia-100 rounded-lg">
+                <BrainCircuit data-icon class="w-5 h-5 text-fuchsia-600" />
+              </div>
+              <div>
+                <h2 class="text-lg font-semibold text-slate-900">Agents Stratégiques</h2>
+                <p class="text-sm text-slate-500">{agentsByCategory.strategic.length} agents pour l'analyse, la stratégie et la performance</p>
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {agentsByCategory.strategic.map((agent) => {
+                const Icon = getAgentIcon(agent.name);
+                return (
+                  <div class="rounded-xl border border-slate-200 bg-white p-6">
+                    <div class="flex items-start gap-3 mb-4">
+                      <div class={`p-2 rounded-lg ${strategicColor}`}>
+                        <Icon data-icon class="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 class="font-semibold text-slate-900">{agent.name.replace('Agent IA ', '')}</h3>
+                        <span class={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium mt-1 ${strategicBg}`}>
+                          Stratégique
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <p class="text-sm text-slate-600 mb-4">{agent.description}</p>
+                    
+                    <div class="space-y-3">
+                      <div>
+                        <div class="text-xs text-slate-500 mb-1">Entrées</div>
+                        <div class="flex flex-wrap gap-1">
+                          {agent.inputs.slice(0, 3).map((input) => (
+                            <span class="px-2 py-1 bg-slate-100 rounded text-xs text-slate-700">{input}</span>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <div class="text-xs text-slate-500 mb-1">Sorties</div>
+                        <div class="flex flex-wrap gap-1">
+                          {agent.outputs.slice(0, 2).map((output) => (
+                            <span class="px-2 py-1 bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200 rounded text-xs">{output}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-1 text-xs text-slate-500 pt-4 mt-4 border-t border-slate-100">
+                      <Clock data-icon class="w-3 h-3" />
+                      {agent.avgTime}
                     </div>
                   </div>
-                  
-                  <div>
-                    <div class="text-xs text-slate-500 mb-1">Sorties</div>
-                    <div class="flex flex-wrap gap-1">
+                );
+              })}
+            </div>
+          </section>
+
+          <!-- Operational Agents -->
+          <section>
+            <div class="flex items-center gap-3 mb-4">
+              <div class="p-2 bg-blue-100 rounded-lg">
+                <Zap data-icon class="w-5 h-5 text-blue-600" />
+              </div>
+              <div>
+                <h2 class="text-lg font-semibold text-slate-900">Agents Opérationnels</h2>
+                <p class="text-sm text-slate-500">{agentsByCategory.operational.length} agents pour l'exécution quotidienne</p>
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {agentsByCategory.operational.map((agent) => {
+                const Icon = getAgentIcon(agent.name);
+                return (
+                  <div class="rounded-xl border border-slate-200 bg-white p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                      <div class={`p-2 rounded-lg ${operationalColor}`}>
+                        <Icon data-icon class="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 class="font-semibold text-slate-900">{agent.name.replace('Agent IA ', '')}</h3>
+                        <span class={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium mt-1 ${operationalBg}`}>
+                          Opérationnel
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <p class="text-sm text-slate-600 line-clamp-2 mb-3">{agent.description}</p>
+                    
+                    <div class="flex flex-wrap gap-1 mb-4">
                       {agent.outputs.slice(0, 2).map((output) => (
-                        <span class="px-2 py-1 bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200 rounded text-xs">{output}</span>
+                        <span class="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded text-xs">{output}</span>
                       ))}
                     </div>
+                    
+                    <div class="flex items-center gap-1 text-xs text-slate-500 pt-4 border-t border-slate-100">
+                      <Clock data-icon class="w-3 h-3" />
+                      Quotidien
+                    </div>
                   </div>
-                </div>
-                
-                <div class="flex items-center justify-between pt-4 mt-4 border-t border-slate-100">
-                  <div class="flex items-center gap-1 text-xs text-slate-500">
-                    <Clock data-icon class="w-3 h-3" />
-                    {agent.avgTime}
-                  </div>
-                  <button class="inline-flex items-center justify-center gap-1 h-8 px-3 rounded-md bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition-colors">
-                    <Play data-icon class="w-3 h-3" />
-                    Run
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
+                );
+              })}
+            </div>
+          </section>
 
-      <!-- Operational Agents -->
-      <section>
-        <div class="flex items-center gap-3 mb-4">
-          <div class="p-2 bg-blue-100 rounded-lg">
-            <Zap data-icon class="w-5 h-5 text-blue-600" />
-          </div>
-          <div>
-            <h2 class="text-lg font-semibold text-slate-900">Agents Opérationnels</h2>
-            <p class="text-sm text-slate-500">{agentsByCategory.operational.length} agents pour l'exécution quotidienne</p>
-          </div>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {agentsByCategory.operational.map((agent) => {
-            const Icon = getAgentIcon(agent.name);
-            return (
-              <div class="group rounded-xl border border-slate-200 bg-white p-6 hover:shadow-lg transition-shadow">
-                <div class="flex items-center gap-3 mb-4">
-                  <div class={`p-2 rounded-lg ${operationalColor}`}>
-                    <Icon data-icon class="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 class="font-semibold text-slate-900">{agent.name.replace('Agent IA ', '')}</h3>
-                    <span class={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium mt-1 ${operationalBg}`}>
-                      Opérationnel
-                    </span>
-                  </div>
-                </div>
-                
-                <p class="text-sm text-slate-600 line-clamp-2 mb-3">{agent.description}</p>
-                
-                <div class="flex flex-wrap gap-1 mb-4">
-                  {agent.outputs.slice(0, 2).map((output) => (
-                    <span class="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded text-xs">{output}</span>
-                  ))}
-                </div>
-                
-                <div class="flex items-center justify-between pt-4 border-t border-slate-100">
-                  <div class="flex items-center gap-1 text-xs text-slate-500">
-                    <Clock data-icon class="w-3 h-3" />
-                    Quotidien
-                  </div>
-                  <button class="inline-flex items-center justify-center gap-1 h-8 px-3 rounded-md border border-slate-200 bg-white text-sm font-medium hover:bg-slate-50 transition-colors">
-                    <Play data-icon class="w-3 h-3" />
-                    Run
-                  </button>
-                </div>
+          <!-- Diffusion Agents -->
+          <section>
+            <div class="flex items-center gap-3 mb-4">
+              <div class="p-2 bg-emerald-100 rounded-lg">
+                <Share2 data-icon class="w-5 h-5 text-emerald-600" />
               </div>
-            );
-          })}
-        </div>
-      </section>
-
-      <!-- Diffusion Agents -->
-      <section>
-        <div class="flex items-center gap-3 mb-4">
-          <div class="p-2 bg-emerald-100 rounded-lg">
-            <Share2 data-icon class="w-5 h-5 text-emerald-600" />
-          </div>
-          <div>
-            <h2 class="text-lg font-semibold text-slate-900">Diffusion & Publication</h2>
-            <p class="text-sm text-slate-500">Distribution sur tous les canaux</p>
-          </div>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {agentsByCategory.diffusion.map((agent) => {
-            const Icon = getAgentIcon(agent.name);
-            return (
-              <div class="group rounded-xl border border-slate-200 bg-white p-6 hover:shadow-lg transition-shadow">
-                <div class="flex items-start justify-between mb-4">
-                  <div class="flex items-center gap-3">
-                    <div class={`p-2 rounded-lg ${diffusionColor}`}>
-                      <Icon data-icon class="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h3 class="font-semibold text-slate-900">{agent.name.replace('Agent IA ', '')}</h3>
-                      <span class={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium mt-1 ${diffusionBg}`}>
-                        Diffusion
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                
-                <p class="text-sm text-slate-600 mb-4">{agent.description}</p>
-                
-                <div class="space-y-3">
-                  <div>
-                    <div class="text-xs text-slate-500 mb-1">Entrées des 4 agents opérationnels</div>
-                    <div class="flex flex-wrap gap-1">
-                      <span class="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded text-xs">Ads Manager</span>
-                      <span class="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded text-xs">Création contenu</span>
-                      <span class="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded text-xs">Email Marketing</span>
-                      <span class="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded text-xs">Community Manager</span>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <div class="text-xs text-slate-500 mb-1">Sortie</div>
-                    <div class="flex flex-wrap gap-1">
-                      {agent.outputs.map((output) => (
-                        <span class="px-2 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded text-xs">{output}</span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="flex items-center justify-between pt-4 mt-4 border-t border-slate-100">
-                  <div class="flex items-center gap-1 text-xs text-slate-500">
-                    <Clock data-icon class="w-3 h-3" />
-                    Quotidien execution
-                  </div>
-                  <button class="inline-flex items-center justify-center gap-1 h-8 px-3 rounded-md bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition-colors">
-                    <Play data-icon class="w-3 h-3" />
-                    Run
-                  </button>
-                </div>
+              <div>
+                <h2 class="text-lg font-semibold text-slate-900">Diffusion & Publication</h2>
+                <p class="text-sm text-slate-500">Distribution sur tous les canaux</p>
               </div>
-            );
-          })}
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {agentsByCategory.diffusion.map((agent) => {
+                const Icon = getAgentIcon(agent.name);
+                return (
+                  <div class="rounded-xl border border-slate-200 bg-white p-6">
+                    <div class="flex items-start gap-3 mb-4">
+                      <div class={`p-2 rounded-lg ${diffusionColor}`}>
+                        <Icon data-icon class="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 class="font-semibold text-slate-900">{agent.name.replace('Agent IA ', '')}</h3>
+                        <span class={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium mt-1 ${diffusionBg}`}>
+                          Diffusion
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <p class="text-sm text-slate-600 mb-4">{agent.description}</p>
+                    
+                    <div class="space-y-3">
+                      <div>
+                        <div class="text-xs text-slate-500 mb-1">Entrées des 4 agents opérationnels</div>
+                        <div class="flex flex-wrap gap-1">
+                          <span class="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded text-xs">Ads Manager</span>
+                          <span class="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded text-xs">Création contenu</span>
+                          <span class="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded text-xs">Email Marketing</span>
+                          <span class="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded text-xs">Community Manager</span>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <div class="text-xs text-slate-500 mb-1">Sortie</div>
+                        <div class="flex flex-wrap gap-1">
+                          {agent.outputs.map((output) => (
+                            <span class="px-2 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded text-xs">{output}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-1 text-xs text-slate-500 pt-4 mt-4 border-t border-slate-100">
+                      <Clock data-icon class="w-3 h-3" />
+                      Exécution quotidienne
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
         </div>
-      </section>
+      </main>
     </div>
   </div>
 </Layout>
