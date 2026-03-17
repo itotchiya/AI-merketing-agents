@@ -1,0 +1,28 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Sidebar from '@/components/layout/Sidebar.vue';
+import Header from '@/components/layout/Header.vue';
+import AIWorkflowDashboard from '@/components/dashboard/AIWorkflowDashboard.vue';
+
+const title = 'AI Workflow | MOS';
+---
+
+<Layout title={title}>
+  <div class="flex min-h-screen">
+    <Sidebar role="admin" activePath="/ai-workflow" client:load />
+    
+    <div class="ml-60 flex-1">
+      <Header 
+        title="AI Process Orchestration" 
+        subtitle="3-Phase autonomous marketing workflow with human approval checkpoints"
+        notificationCount={1}
+        currentRole="admin"
+        client:load
+      />
+      
+      <main class="p-6">
+        <AIWorkflowDashboard client:load />
+      </main>
+    </div>
+  </div>
+</Layout>

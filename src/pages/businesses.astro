@@ -1,0 +1,27 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Sidebar from '@/components/layout/Sidebar.vue';
+import Header from '@/components/layout/Header.vue';
+import BusinessManager from '@/components/businesses/BusinessManager.vue';
+
+const title = 'Businesses | MOS';
+---
+
+<Layout title={title}>
+  <div class="flex min-h-screen">
+    <Sidebar role="superadmin" activePath="/businesses" client:load />
+    
+    <div class="ml-60 flex-1">
+      <Header 
+        title="Business Management" 
+        subtitle="Manage multi-tenant businesses and their subscriptions"
+        currentRole="superadmin"
+        client:load
+      />
+      
+      <main class="p-6">
+        <BusinessManager client:load />
+      </main>
+    </div>
+  </div>
+</Layout>

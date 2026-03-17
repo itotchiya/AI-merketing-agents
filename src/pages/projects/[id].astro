@@ -1,0 +1,40 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Sidebar from '@/components/layout/Sidebar.vue';
+import Header from '@/components/layout/Header.vue';
+import ProjectDetailView from '@/components/projects/ProjectDetailView.vue';
+import { projects } from '@/data/mockData';
+
+export function getStaticPaths() {
+  return projects.map(project => ({
+    params: { id: project.id.toString() },
+  }));
+}
+
+const { id } = Astro.params;
+const projectId = parseInt(id || '1');
+
+// Find the project
+const project = projects.find(p => p.id === projectId) || projects[0];
+
+const title = `${project.name} | MOS`;
+---
+
+<Layout title={title}>
+  <div class="flex min-h-screen">
+    <Sidebar role="admin" activePath="/projects" client:load />
+    
+    <div class="ml-60 flex-1">
+      <Header 
+        title={project.name}
+        subtitle={`Project #${project.id} • ${project.status} • Due ${project.dueDate}`}
+        currentRole="admin"
+        client:load
+      />
+      
+      <main class="p-6">
+        <ProjectDetailView projectId={projectId} client:load />
+      </main>
+    </div>
+  </div>
+</Layout>

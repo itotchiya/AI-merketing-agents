@@ -1,0 +1,100 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Sidebar from '@/components/layout/Sidebar.vue';
+import Header from '@/components/layout/Header.vue';
+
+const title = 'Audit Logs | MOS';
+
+const auditEvents = [
+  { id: 1, user: 'Thomas Anderson', action: 'agent.execute', target: 'Studio Créatif', time: '2 min ago', severity: 'info' },
+  { id: 2, user: 'System', action: 'api.rate_limit.warning', target: 'Meta Ads API', time: '5 min ago', severity: 'warning' },
+  { id: 3, user: 'Marie Dubois', action: 'validation.approved', target: 'Stratégie outputs', time: '10 min ago', severity: 'success' },
+  { id: 4, user: 'Pierre Martin', action: 'user.login', target: 'Chrome on Windows', time: '15 min ago', severity: 'info' },
+  { id: 5, user: 'System', action: 'agent.failed', target: 'Ads Manager', time: '20 min ago', severity: 'error' },
+  { id: 6, user: 'Sarah Chen', action: 'business.created', target: 'TechStart Inc', time: '1 hour ago', severity: 'success' },
+  { id: 7, user: 'Thomas Anderson', action: 'user.invited', target: 'newuser@example.com', time: '2 hours ago', severity: 'info' },
+  { id: 8, user: 'System', action: 'backup.completed', target: 'Daily backup', time: '3 hours ago', severity: 'success' },
+];
+---
+
+<Layout title={title}>
+  <div class="flex min-h-screen">
+    <Sidebar role="superadmin" activePath="audit" client:load />
+    
+    <div class="ml-60 flex-1">
+      <Header 
+        title="Audit Logs" 
+        subtitle="Complete system activity history"
+        currentRole="superadmin"
+        client:load
+      />
+      
+      <main class="p-6">
+        {/* Filters */}
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center gap-2">
+            <input 
+              type="date" 
+              class="h-9 rounded-lg border border-input bg-background px-3 text-sm"
+            />
+            <span class="text-muted-foreground">to</span>
+            <input 
+              type="date" 
+              class="h-9 rounded-lg border border-input bg-background px-3 text-sm"
+            />
+            <button class="px-4 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm font-medium hover:bg-secondary/80">
+              Event Type
+            </button>
+            <button class="px-4 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm font-medium hover:bg-secondary/80">
+              Severity
+            </button>
+          </div>
+          <button class="px-4 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm font-medium flex items-center gap-2">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Export
+          </button>
+        </div>
+
+        {/* Timeline */}
+        <div class="rounded-xl border bg-card p-6">
+          <div class="space-y-4">
+            {auditEvents.map((event) => (
+              <div class="flex gap-4 pb-4 border-b last:border-0">
+                <div class={`h-8 w-8 rounded-full flex items-center justify-center shrink-0 ${
+                  event.severity === 'error' ? 'bg-red-100 text-red-600' :
+                  event.severity === 'warning' ? 'bg-amber-100 text-amber-600' :
+                  event.severity === 'success' ? 'bg-green-100 text-green-600' :
+                  'bg-blue-100 text-blue-600'
+                }`}>
+                  {event.severity === 'error' && <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>}
+                  {event.severity === 'warning' && <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>}
+                  {event.severity === 'success' && <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>}
+                  {event.severity === 'info' && <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="font-medium">{event.user}</span>
+                    <span class="text-muted-foreground">→</span>
+                    <span class="text-muted-foreground">{event.action}</span>
+                    <span class="font-medium text-primary">{event.target}</span>
+                  </div>
+                  <p class="text-xs text-muted-foreground">{event.time}</p>
+                </div>
+                <span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${
+                  event.severity === 'error' ? 'bg-red-100 text-red-700' :
+                  event.severity === 'warning' ? 'bg-amber-100 text-amber-700' :
+                  event.severity === 'success' ? 'bg-green-100 text-green-700' :
+                  'bg-blue-100 text-blue-700'
+                }`}>
+                  {event.severity}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</Layout>

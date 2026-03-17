@@ -1,0 +1,44 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Sidebar from '@/components/layout/Sidebar.vue';
+import Header from '@/components/layout/Header.vue';
+import KPICard from '@/components/dashboard/KPICard.vue';
+import ExecutifViews from '@/components/executif/ExecutifViews.vue';
+import { executifKPIs } from '@/data/mockData';
+
+const title = 'Exécutif Dashboard | MOS';
+---
+
+<Layout title={title}>
+  <div class="flex min-h-screen">
+    <Sidebar role="executif" activePath="/executif" client:load />
+    
+    <div class="ml-60 flex-1">
+      <Header 
+        title="My Workspace" 
+        subtitle="Bonjour Pierre! Here's your focus for today."
+        currentRole="executif"
+        client:load
+      />
+      
+      <main class="p-6">
+        {/* KPI Cards */}
+        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+          {executifKPIs.map((kpi) => (
+            <KPICard 
+              label={kpi.label}
+              value={kpi.value}
+              trend={kpi.trend}
+              trendLabel={kpi.trendLabel}
+              icon={kpi.icon}
+              client:load
+            />
+          ))}
+        </div>
+
+        {/* Views with Tabs */}
+        <ExecutifViews client:load />
+      </main>
+    </div>
+  </div>
+</Layout>

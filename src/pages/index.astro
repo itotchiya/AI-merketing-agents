@@ -1,0 +1,126 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Sidebar from '@/components/layout/Sidebar.vue';
+import Header from '@/components/layout/Header.vue';
+import KPICard from '@/components/dashboard/KPICard.vue';
+import ProjectCard from '@/components/dashboard/ProjectCard.vue';
+import ValidationItem from '@/components/dashboard/ValidationItem.vue';
+import ActivityFeed from '@/components/dashboard/ActivityFeed.vue';
+import { adminKPIs, projects, validationItems, activities } from '@/data/mockData';
+
+const title = 'Admin Dashboard | MOS';
+---
+
+<Layout title={title}>
+  <div class="flex min-h-screen">
+    <Sidebar role="admin" activePath="/" client:load />
+    
+    <div class="ml-60 flex-1">
+      <Header 
+        title="Dashboard" 
+        subtitle="Welcome back, Thomas! Here's what's happening with your marketing today."
+        notificationCount={3}
+        currentRole="admin"
+        client:load
+      />
+      
+      <main class="p-6">
+        {/* BPS Score */}
+        <div class="mb-8">
+          <div class="flex items-center gap-2 mb-2">
+            <h2 class="text-lg font-semibold">Business Performance Score</h2>
+            <span class="text-2xl font-bold text-primary">8.4/10</span>
+          </div>
+          <div class="w-full h-2 bg-secondary rounded-full overflow-hidden">
+            <div class="h-full w-[84%] bg-primary rounded-full"></div>
+          </div>
+          <p class="mt-1 text-sm text-muted-foreground">↑ 0.3 from last week</p>
+        </div>
+
+        {/* KPI Cards */}
+        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+          {adminKPIs.map((kpi) => (
+            <KPICard 
+              label={kpi.label}
+              value={kpi.value}
+              trend={kpi.trend}
+              trendLabel={kpi.trendLabel}
+              icon={kpi.icon}
+              client:load
+            />
+          ))}
+        </div>
+
+        {/* Two Column Layout */}
+        <div class="grid gap-6 lg:grid-cols-2">
+          {/* Validation Queue */}
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-lg font-semibold">Pending Validations ({validationItems.length})</h2>
+              <a href="/validation" class="text-sm text-primary hover:underline">View All</a>
+            </div>
+            <div class="space-y-4">
+              {validationItems.slice(0, 2).map((item) => (
+                <ValidationItem validation={item} client:load />
+              ))}
+            </div>
+          </div>
+
+          {/* Active Projects */}
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-lg font-semibold">Active Projects</h2>
+              <a href="/projects" class="text-sm text-primary hover:underline">View All</a>
+            </div>
+            <div class="space-y-4">
+              {projects.filter(p => p.status === 'active').slice(0, 3).map((project) => (
+                <ProjectCard project={project} client:load />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Section */}
+        <div class="grid gap-6 lg:grid-cols-2 mt-8">
+          {/* Agent Activity */}
+          <div class="rounded-xl border bg-card p-6">
+            <h2 class="text-lg font-semibold mb-4">Agent Activity (7 days)</h2>
+            <div class="h-40 flex items-end gap-2">
+              {[40, 65, 45, 80, 55, 70, 60].map((height, i) => (
+                <div class="flex-1 flex flex-col gap-1">
+                  <div 
+                    class="bg-primary/20 rounded-sm transition-all hover:bg-primary/30"
+                    style={`height: ${height * 1.5}px`}
+                  ></div>
+                  <span class="text-[10px] text-muted-foreground text-center">
+                    {['M', 'T', 'W', 'T', 'F', 'S', 'S'][i]}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div class="mt-4 flex items-center gap-4 text-sm">
+              <div class="flex items-center gap-1.5">
+                <div class="h-2 w-2 rounded-full bg-pink-500"></div>
+                <span>Strategic</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <div class="h-2 w-2 rounded-full bg-blue-500"></div>
+                <span>Operational</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <div class="h-2 w-2 rounded-full bg-emerald-500"></div>
+                <span>Diffusion</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Team Activity */}
+          <div class="rounded-xl border bg-card p-6">
+            <h2 class="text-lg font-semibold mb-4">Team Activity</h2>
+            <ActivityFeed activities={activities} client:load />
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</Layout>

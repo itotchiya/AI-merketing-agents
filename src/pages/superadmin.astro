@@ -1,0 +1,167 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Sidebar from '@/components/layout/Sidebar.vue';
+import Header from '@/components/layout/Header.vue';
+import KPICard from '@/components/dashboard/KPICard.vue';
+import ActivityFeed from '@/components/dashboard/ActivityFeed.vue';
+import { superAdminKPIs, activities, businesses, agentVolumeData } from '@/data/mockData';
+
+const title = 'SuperAdmin Dashboard | MOS';
+---
+
+<Layout title={title}>
+  <div class="flex min-h-screen">
+    <Sidebar role="superadmin" activePath="/superadmin" client:load />
+    
+    <div class="ml-60 flex-1">
+      <Header 
+        title="Platform Administration" 
+        subtitle="Global system health and multi-tenant overview"
+        notificationCount={5}
+        currentRole="superadmin"
+        client:load
+      />
+      
+      <main class="p-6">
+        {/* Platform Health */}
+        <div class="mb-6 p-4 rounded-xl border bg-green-50 border-green-200 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="h-10 w-10 rounded-full bg-green-500 flex items-center justify-center">
+              <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <div>
+              <h2 class="font-semibold text-green-900">All Systems Operational</h2>
+              <p class="text-sm text-green-700">Last checked: 2 minutes ago</p>
+            </div>
+          </div>
+          <button class="px-4 py-2 bg-white rounded-lg text-sm font-medium text-green-700 border border-green-300 hover:bg-green-50">
+            View System Logs
+          </button>
+        </div>
+
+        {/* KPI Cards */}
+        <div class="grid gap-4 md:grid-cols-3 lg:grid-cols-5 mb-8">
+          {superAdminKPIs.map((kpi) => (
+            <KPICard 
+              label={kpi.label}
+              value={kpi.value}
+              trend={kpi.trend}
+              trendLabel={kpi.trendLabel}
+              icon={kpi.icon}
+              client:load
+            />
+          ))}
+        </div>
+
+        {/* Two Column Layout */}
+        <div class="grid gap-6 lg:grid-cols-2 mb-8">
+          {/* Businesses Overview */}
+          <div class="rounded-xl border bg-card p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-lg font-semibold">Businesses Overview</h2>
+              <a href="/businesses" class="text-sm text-primary hover:underline">View All</a>
+            </div>
+            <div class="h-48 flex items-end gap-3">
+              {businesses.map((biz) => (
+                <div class="flex-1 flex flex-col gap-2">
+                  <div class="relative w-full">
+                    <div 
+                      class="bg-primary/20 rounded-md transition-all hover:bg-primary/30"
+                      style={`height: ${(biz.revenue / 50000) * 150}px`}
+                    ></div>
+                    <div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-medium">
+                      €{(biz.revenue / 1000).toFixed(0)}K
+                    </div>
+                  </div>
+                  <span class="text-[10px] text-muted-foreground text-center truncate">
+                    {biz.name}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div class="mt-4 pt-4 border-t flex items-center justify-between text-sm">
+              <span class="text-muted-foreground">Active: 22 | Suspended: 1 | Trial: 1</span>
+              <a href="/businesses" class="text-primary font-medium hover:underline">Manage Businesses</a>
+            </div>
+          </div>
+
+          {/* Agent Execution Volume */}
+          <div class="rounded-xl border bg-card p-6">
+            <h2 class="text-lg font-semibold mb-4">Agent Execution Volume</h2>
+            <div class="h-40 flex items-end gap-2">
+              {agentVolumeData.map((day) => {
+                const total = day.strategic + day.operational + day.diffusion;
+                return (
+                  <div class="flex-1 flex flex-col gap-1">
+                    <div class="relative w-full">
+                      <div 
+                        class="w-full rounded-sm flex flex-col-reverse overflow-hidden"
+                        style={`height: ${(total / 200) * 120}px`}
+                      >
+                        <div class="bg-emerald-400 w-full" style={`height: ${(day.diffusion / total) * 100}%`}></div>
+                        <div class="bg-blue-400 w-full" style={`height: ${(day.operational / total) * 100}%`}></div>
+                        <div class="bg-pink-400 w-full" style={`height: ${(day.strategic / total) * 100}%`}></div>
+                      </div>
+                    </div>
+                    <span class="text-[10px] text-muted-foreground text-center">{day.day}</span>
+                  </div>
+                );
+              })}
+            </div>
+            <div class="mt-4 flex items-center gap-4 text-sm">
+              <div class="flex items-center gap-1.5">
+                <div class="h-2 w-2 rounded-full bg-pink-400"></div>
+                <span>Strategic 30%</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <div class="h-2 w-2 rounded-full bg-blue-400"></div>
+                <span>Operational 55%</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <div class="h-2 w-2 rounded-full bg-emerald-400"></div>
+                <span>Diffusion 15%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Section */}
+        <div class="grid gap-6 lg:grid-cols-2">
+          {/* System Alerts */}
+          <div class="rounded-xl border bg-card p-6">
+            <h2 class="text-lg font-semibold mb-4">System Alerts</h2>
+            <div class="space-y-3">
+              <div class="flex items-start gap-3 p-3 rounded-lg bg-red-50 border border-red-200">
+                <div class="h-5 w-5 rounded-full bg-red-500 flex items-center justify-center shrink-0 mt-0.5">
+                  <span class="text-white text-xs">!</span>
+                </div>
+                <div>
+                  <p class="font-medium text-red-900">API Rate Limit Warning</p>
+                  <p class="text-sm text-red-700">Meta Ads API approaching 90% of quota</p>
+                  <button class="mt-2 text-xs text-red-700 underline">Investigate</button>
+                </div>
+              </div>
+              <div class="flex items-start gap-3 p-3 rounded-lg bg-amber-50 border border-amber-200">
+                <div class="h-5 w-5 rounded-full bg-amber-500 flex items-center justify-center shrink-0 mt-0.5">
+                  <span class="text-white text-xs">!</span>
+                </div>
+                <div>
+                  <p class="font-medium text-amber-900">Storage at 78%</p>
+                  <p class="text-sm text-amber-700">Consider archiving old projects</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Activity Stream */}
+          <div class="rounded-xl border bg-card p-6">
+            <h2 class="text-lg font-semibold mb-4">Real-time Activity</h2>
+            <ActivityFeed activities={activities} client:load />
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</Layout>

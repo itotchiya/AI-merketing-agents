@@ -1,0 +1,27 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Sidebar from '@/components/layout/Sidebar.vue';
+import Header from '@/components/layout/Header.vue';
+import AgentCategoryTabs from '@/components/agents/AgentCategoryTabs.vue';
+
+const title = 'Agent Hub | MOS';
+---
+
+<Layout title={title}>
+  <div class="flex min-h-screen">
+    <Sidebar role="admin" activePath="/agents" client:load />
+    
+    <div class="ml-60 flex-1">
+      <Header 
+        title="Agent Hub" 
+        subtitle="Launch and manage AI agents for your projects"
+        currentRole="admin"
+        client:load
+      />
+      
+      <main class="p-6">
+        <AgentCategoryTabs client:load />
+      </main>
+    </div>
+  </div>
+</Layout>
